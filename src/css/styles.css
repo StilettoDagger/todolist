@@ -4,7 +4,8 @@
     --font-inter: "Inter", sans-serif;
     --font-title: "Carattere", handwriting;
     --color-primary: #1b76ff;
-    --color-secondary: #ADD5F7;
+    --color-todogroups: #ADD5F7;
+    --color-todos: #7ABAF2;
 }
 
 html, body {
@@ -12,13 +13,25 @@ html, body {
 }
 
 body {
-    @apply bg-primary flex flex-col items-center;
+    @apply bg-primary flex flex-col items-center p-12 gap-12;
 }
 
 #app-title {
-    @apply w-2/3 mt-12 font-title text-center text-9xl text-gray-100 font-bold border-b;
+    @apply w-2/3 font-title text-center text-9xl text-gray-100 font-bold border-b;
 }
 
 #app {
-    @apply overflow-scroll m-auto h-2/3 w-2/3 rounded-2xl bg-secondary border-3 border-dashed shadow-2xl;
+    @apply bg-gray-200 grid grid-cols-4 font-inter overflow-scroll m-auto h-full w-2/3 rounded-2xl border-3 border-dashed shadow-2xl;
+}
+
+.todo-groups {
+    @apply bg-todogroups border-r-2 p-4 font-bold;
+}
+
+.todo-groups > h2 {
+    @apply text-3xl
+}
+
+.todo-main {
+    @apply col-span-3 bg-todos;
 }
