@@ -1,10 +1,24 @@
 @import "tailwindcss";
-@import url(https://fonts.bunny.net/css?family=calligraffitti:400|inter:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i);
+@import url(https://fonts.bunny.net/css?family=carattere:400|inter:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i);
 @theme {
     --font-inter: "Inter", sans-serif;
-    --font-handwritten: "Calligraffitti", handwriting;
+    --font-title: "Carattere", handwriting;
+    --color-primary: #1b76ff;
+    --color-secondary: #ADD5F7;
+}
+
+html, body {
+    @apply h-screen;
+}
+
+body {
+    @apply bg-primary flex flex-col items-center;
 }
 
 #app-title {
-    @apply mt-12 font-handwritten text-center text-5xl text-blue-700 font-bold;
+    @apply w-2/3 mt-12 font-title text-center text-9xl text-gray-100 font-bold border-b;
+}
+
+#app {
+    @apply overflow-scroll m-auto h-2/3 w-2/3 rounded-2xl bg-secondary border-3 border-dashed shadow-2xl;
 }
