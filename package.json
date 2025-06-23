@@ -1,0 +1,40 @@
+{
+  "name": "package",
+  "version": "1.0.0",
+  "description": "A Webpack project with Tailwind CSS and PostCSS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "build:dev": "webpack --config webpack.dev.js",
+    "deploy": "git add -f dist && git commit -m 'Deployment commit' && git subtree push --prefix dist origin gh-pages"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StilettoDagger/todolist.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/StilettoDagger/todolist/issues"
+  },
+  "homepage": "https://github.com/StilettoDagger/todolist#readme",
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.10",
+    "autoprefixer": "^10.4.21",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.3",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.1.1",
+    "postcss-nested": "^7.0.2",
+    "style-loader": "^4.0.0",
+    "tailwind": "^4.0.0",
+    "tailwindcss": "^4.1.10",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2",
+    "webpack-merge": "^6.0.1"
+  }
+}
