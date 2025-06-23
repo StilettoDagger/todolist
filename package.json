@@ -1,5 +1,5 @@
 {
-  "name": "package",
+  "name": "todolist",
   "version": "1.0.0",
   "description": "A Webpack project with Tailwind CSS and PostCSS",
   "main": "index.js",

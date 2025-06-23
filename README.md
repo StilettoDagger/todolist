@@ -1,3 +1,3 @@
-# Webpack template
+# Todo-list Application
 
-A template for creating a webpack application that uses tailwindcss and PostCSS.
+A simple todo-list application made for The Odin Project.
