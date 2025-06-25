@@ -13,7 +13,7 @@ html, body {
 }
 
 body {
-    @apply bg-primary flex flex-col items-center p-12 gap-12;
+    @apply p-12 bg-primary flex flex-col items-center gap-12;
 }
 
 #app-title {
@@ -34,4 +34,16 @@ body {
 
 .todo-main {
     @apply col-span-3 bg-todos;
+}
+
+.overlay {
+    @apply flex flex-col h-screen w-full z-10 fixed inset-0 invisible bg-neutral-900/0;
+}
+
+.overlay-active {
+    @apply visible bg-neutral-900/70;
+}
+
+.dialog {
+    @apply relative flex flex-col text-gray-200 m-auto z-20 bg-emerald-900;
 }
