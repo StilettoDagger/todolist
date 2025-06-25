@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import url(https://fonts.bunny.net/css?family=carattere:400|inter:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i);
+
 @theme {
     --font-inter: "Inter", sans-serif;
     --font-title: "Carattere", handwriting;
@@ -8,7 +9,8 @@
     --color-todos: #7ABAF2;
 }
 
-html, body {
+html,
+body {
     @apply h-screen;
 }
 
@@ -28,7 +30,7 @@ body {
     @apply bg-todogroups border-r-2 p-4 font-bold;
 }
 
-.todo-groups > h2 {
+.todo-groups>h2 {
     @apply text-3xl
 }
 
@@ -37,7 +39,7 @@ body {
 }
 
 .overlay {
-    @apply flex flex-col h-screen w-full z-10 fixed inset-0 invisible bg-neutral-900/0;
+    @apply flex flex-col h-screen w-full z-10 fixed top-0 invisible bg-neutral-900/0;
 }
 
 .overlay-active {
@@ -45,5 +47,27 @@ body {
 }
 
 .dialog {
-    @apply relative flex flex-col text-gray-200 m-auto z-20 bg-emerald-900;
+    @apply rounded-2xl shadow-2xl p-4 relative flex flex-col text-gray-200 m-auto z-20 bg-blue-900;
+}
+
+.dialog-title {
+    @apply text-3xl text-center font-bold underline mb-4;
+}
+
+form label {
+    @apply text-gray-100 font-bold;
+}
+
+form input,
+form textarea {
+    @apply bg-gray-800 p-2 rounded-xl shadow-xl outline-gray-300;
+}
+
+form button[type="submit"] {
+    @apply bg-emerald-700 mt-4 font-bold w-1/2 mx-auto py-2 rounded-full shadow-xl cursor-pointer hover:bg-emerald-800;
+}
+
+form,
+form>div {
+    @apply flex flex-col gap-2
 }

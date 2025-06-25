@@ -1,6 +1,7 @@
 import './css/styles.css';
-import TodoManager from './modules/todoManger';
+import TodoManager from './modules/todoManager';
+
 
 const todoApp = new TodoManager("app");
+todoApp.addTodoGroup();
 
-console.log(todoApp.todoUI);

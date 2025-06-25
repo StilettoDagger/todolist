@@ -7,6 +7,7 @@ class TodoUI {
 	constructor(containerID) {
 		this.appContainer = document.getElementById(containerID);
 		this.#renderOverlay();
+		this.data = {};
 	}
 
 	// TODO: add methods to render a window for adding and editing todo groups and todo items.
@@ -72,15 +73,58 @@ class TodoUI {
 			<div class="dialog-body"></div>
 		</div>
 		`;
+		this.overlay.addEventListener("click", (e) => {
+			if (e.target === e.currentTarget && e.target.classList.contains("overlay-active"))
+			{
+				this.removeOverlay();
+			}
+		})
 	}
 
 	/**
 	 * Toggles the visibility of the overlay.
 	 */
-	toggleOverlay() {
+	#toggleOverlay() {
 		this.overlay.classList.toggle("overlay-active");
 	}
 
+	/** Clears the content of the overlay */
+	#clearOverlay() {
+		this.overlay.innerHTML = `
+		<div class="dialog">
+			<h2 class="dialog-title"></h2>
+			<div class="dialog-body"></div>
+		</div>
+		`;
+	}
+
+	/** Hides the overlay and clears its content */
+	removeOverlay() {
+		this.#toggleOverlay();
+		this.#clearOverlay();
+	}
+
+	renderAddGroupDialog() {
+		this.#toggleOverlay();
+		// TODO: Implement add group dialog
+		const dialogBody = document.querySelector(".dialog-body");
+		const dialogTitle = document.querySelector(".dialog-title");
+		dialogTitle.textContent = "Add a new group";
+		dialogBody.innerHTML = `
+		<form id="add-group-form">
+			<div>
+				<label for="group-name">Group name:</label>
+				<input type="text" name="group-name" id="group-name" required/>
+			</div>
+			<div>
+				<label for="group-desc">Briefly describe the group (optional):</label>
+				<textarea class="resize-none" id="group-desc"></textarea>
+			</div>
+			<button type="submit">Add group</button>
+		</form>
+		`;
+		return document.getElementById("add-group-form");
+	}
 }
 
 export default TodoUI;
