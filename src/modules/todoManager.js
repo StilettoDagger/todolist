@@ -48,8 +48,8 @@ class TodoManager {
                     this.todoUI.removeOverlay();
                     this.todoUI.renderGroups(this.todoGroups);
                     this.#addRemoveGroupHandlers();
+                    this.#addEditGroupHandlers();
                     this.currentGroup = this.todoGroups.at(-1);
-                    console.log(this.currentGroup);
                 }
             });
     }
@@ -60,17 +60,55 @@ class TodoManager {
         const removeButtons = document.querySelectorAll(".todo-group-del");
         removeButtons.forEach((button) => {
             button.addEventListener("click", (e) => {
-                const groupItem = e.target.parentElement;
+                const groupItem = e.target.closest("li[data-index]");
                 const index = Number(groupItem.getAttribute("data-index"));
                 this.todoGroups.splice(index, 1);
-                e.target.parentElement.remove();
+                groupItem.remove();
             })
         })
     }
 
+    /** Adds event handlers to edit buttons for editing info of todo groups. */
     #addEditGroupHandlers()
     {
         //TODO: Implement this function.
+        const editButtons = document.querySelectorAll(".todo-group-edit");
+        editButtons.forEach((button) => {
+            button.addEventListener("click", (e) => {
+                const groupItem = e.target.closest("li[data-index]");
+                const index = Number(groupItem.getAttribute("data-index"));
+                const groupToEdit = this.todoGroups[index];
+                const editGroupForm = this.todoUI.renderEditGroupDialog(groupToEdit);
+                this.#addEditGroupSubmitHandler(editGroupForm, index)
+            })
+        })
+    }
+
+    /**
+     * Adds event handler when submitting the edit group form.
+     * When validated, the todo group is edited and the todo groups are updated.
+     * @param {Node} editGroupForm - The form that contains the new data to be validated.
+     * @param {Number} index - The index of the group to edit in the todoGroups array.
+     */
+    #addEditGroupSubmitHandler(editGroupForm, index)
+    {
+        editGroupForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+    
+                if (editGroupForm.checkValidity())
+                {
+                    const groupNameInput = document.getElementById("group-name");
+                    const groupDescInput = document.getElementById("group-desc");
+                    const groupName = groupNameInput.value;
+                    const groupDesc = groupDescInput.value;
+    
+                    const groupToEdit = this.todoGroups[index];
+                    groupToEdit.setGroupName(groupName);
+                    groupToEdit.setGroupDesc(groupDesc);
+                    this.todoUI.renderGroups(this.todoGroups);
+                    this.#addRemoveGroupHandlers();
+                }
+        })
     }
 }
 

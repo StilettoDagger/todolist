@@ -1,9 +1,11 @@
 import TodoItem from "./todoItem";
 
 class TodoGroup {
+    #groupName;
+    #groupDesc;
 	constructor(groupName, groupDesc) {
-		this.groupName = groupName;
-		this.groupDesc = groupDesc;
+		this.#groupName = groupName;
+		this.#groupDesc = groupDesc;
 		this.todos = [];
 	}
 
@@ -25,11 +27,19 @@ class TodoGroup {
     }
 
     setGroupName(newName) {
-        this.groupName = newName;
+        this.#groupName = newName;
     }
 
     setGroupDesc(newDesc) {
-        this.groupDesc = newDesc;
+        this.#groupDesc = newDesc;
+    }
+
+    getGroupName() {
+        return this.#groupName;
+    }
+
+    getGroupDesc() {
+        return this.#groupDesc;
     }
 }
 

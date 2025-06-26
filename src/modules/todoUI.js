@@ -23,12 +23,19 @@ class TodoUI {
 		todoGroups.forEach((group, index) => {
 			const groupItem = document.createElement("li");
 			const groupNameEl = document.createElement("h3");
-			groupNameEl.textContent = group.groupName;
+			groupNameEl.textContent = group.getGroupName();
 			groupItem.appendChild(groupNameEl);
+			const groupButtons = document.createElement("div");
+			groupButtons.className = "todo-group-buttons";
 			const groupDelButton = document.createElement("button");
 			groupDelButton.innerHTML  = `<span class="icon-[material-symbols--delete-outline]"></span>`;
 			groupDelButton.className = "todo-group-del";
-			groupItem.appendChild(groupDelButton);
+			const groupEditButton = document.createElement("button");
+			groupEditButton.innerHTML = `<span class="icon-[material-symbols--edit-square-outline]"></span>`;
+			groupEditButton.className = "todo-group-edit";
+			groupButtons.appendChild(groupEditButton);
+			groupButtons.appendChild(groupDelButton);
+			groupItem.appendChild(groupButtons);
 			groupItem.className = "todo-group-item";
 			groupItem.setAttribute("data-index", index);
 			todoGroupsList.appendChild(groupItem);
@@ -128,6 +135,27 @@ class TodoUI {
 		</form>
 		`;
 		return document.getElementById("add-group-form");
+	}
+
+	renderEditGroupDialog(groupToEdit) {
+		this.#toggleOverlay();
+		const dialogBody = document.querySelector(".dialog-body");
+		const dialogTitle = document.querySelector(".dialog-title");
+		dialogTitle.textContent = "Edit group";
+		dialogBody.innerHTML = `
+		<form id="edit-group-form">
+			<div>
+				<label for="group-name">Group name:</label>
+				<input placeholder="${groupToEdit.getGroupName()}" type="text" name="group-name" id="group-name" required/>
+			</div>
+			<div>
+				<label for="group-desc">Briefly describe the group (optional):</label>
+				<textarea placeholder="${groupToEdit.getGroupDesc()}" class="resize-none" id="group-desc"></textarea>
+			</div>
+			<button type="submit">Edit group</button>
+		</form>
+		`;
+		return document.getElementById("edit-group-form");
 	}
 }
 
