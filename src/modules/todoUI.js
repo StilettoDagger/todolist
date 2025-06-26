@@ -26,7 +26,7 @@ class TodoUI {
 			groupNameEl.textContent = group.groupName;
 			groupItem.appendChild(groupNameEl);
 			const groupDelButton = document.createElement("button");
-			groupDelButton.textContent  = "❌";
+			groupDelButton.innerHTML  = `<span class="icon-[material-symbols--delete-outline]"></span>`;
 			groupDelButton.className = "todo-group-del";
 			groupItem.appendChild(groupDelButton);
 			groupItem.className = "todo-group-item";

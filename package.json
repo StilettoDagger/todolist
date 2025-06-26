@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/StilettoDagger/todolist#readme",
   "devDependencies": {
+    "@iconify/json": "^2.2.352",
+    "@iconify/tailwind4": "^1.0.6",
     "@tailwindcss/postcss": "^4.1.10",
     "autoprefixer": "^10.4.21",
     "css-loader": "^7.1.2",

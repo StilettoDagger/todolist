@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import url(https://fonts.bunny.net/css?family=carattere:400|inter:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i);
+@plugin "@iconify/tailwind4";
 
 @theme {
     --font-inter: "Inter", sans-serif;
@@ -73,13 +74,17 @@ form>div {
 }
 
 #add-new-group {
-    @apply text-gray-100 bg-blue-600 p-2 rounded-full cursor-pointer hover:bg-blue-700 mt-4;
+    @apply flex flex-row items-center text-gray-100 bg-blue-600 p-2 rounded-full cursor-pointer hover:bg-blue-700 mt-4;
+}
+
+button span {
+    @apply text-2xl
 }
 
 .todo-group-item {
-    @apply font-normal flex flex-row justify-between;
+    @apply font-normal flex flex-row items-center justify-between;
 }
 
 .todo-group-del {
-    @apply text-red-800;
+    @apply cursor-pointer text-red-600 hover:text-red-700;
 }
