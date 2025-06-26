@@ -30,8 +30,8 @@ body {
     @apply bg-todogroups border-r-2 p-4 font-bold;
 }
 
-.todo-groups>h2 {
-    @apply text-3xl
+.todo-groups > h2 {
+    @apply text-2xl border-b-1 border-gray-600 mb-4
 }
 
 .todo-main {
@@ -70,4 +70,16 @@ form button[type="submit"] {
 form,
 form>div {
     @apply flex flex-col gap-2
+}
+
+#add-new-group {
+    @apply text-gray-100 bg-blue-600 p-2 rounded-full cursor-pointer hover:bg-blue-700 mt-4;
+}
+
+.todo-group-item {
+    @apply font-normal flex flex-row justify-between;
+}
+
+.todo-group-del {
+    @apply text-red-800;
 }

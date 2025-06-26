@@ -10,43 +10,62 @@ class TodoManager {
         this.todoUI = new TodoUI(containerID);
         this.todoGroups = [];
         this.currentGroup;
+        this.#addNewGroupHandler();
     }
 
     // TODO: add event handlers for UI elements (switching groups and toggling todos)
     // TODO: add functionality to add, edit, and remove todos and todo groups.
 
  
+  
     /**
-     * Renders the dialog to add a new todo group
-     * then adds an event handler when submitting the dialog
-     * to create a new TodoGroup and push it to the todoGroups array.
+     * Adds a handler for the button responsible for creating a new todo group
      */
-    addTodoGroup() {
-        // Opens add group window
-        const addGroupForm = this.todoUI.renderAddGroupDialog();
-		addGroupForm.addEventListener("submit", (e) => {
-			e.preventDefault();
+    #addNewGroupHandler() {
+        const addTodoGroupButton = document.getElementById("add-new-group");
+        addTodoGroupButton.addEventListener("click", (e) => {
+            // Opens add group window
+            const addGroupForm = this.todoUI.renderAddGroupDialog();
+            this.#addNewGroupSubmitHandler(addGroupForm);
+        });
 
-			if (addGroupForm.checkValidity())
-			{
-				const groupNameInput = document.getElementById("group-name");
-				const groupDescInput = document.getElementById("group-desc");
-				const groupName = groupNameInput.value;
-				const groupDesc = groupDescInput.value;
-
-                const todoGroup = new TodoGroup(groupName, groupDesc);
-                this.todoGroups.push(todoGroup);
-                this.todoUI.removeOverlay();
-			}
-		});
     }
 
-    /**
-     * Add event handlers for removing todo groups
-     */
-    removeTodoGroupHandlers()
+    /** Adds a handler for submitting the form for adding a new group. */
+    #addNewGroupSubmitHandler(addGroupForm) {
+            addGroupForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+    
+                if (addGroupForm.checkValidity())
+                {
+                    const groupNameInput = document.getElementById("group-name");
+                    const groupDescInput = document.getElementById("group-desc");
+                    const groupName = groupNameInput.value;
+                    const groupDesc = groupDescInput.value;
+    
+                    const todoGroup = new TodoGroup(groupName, groupDesc);
+                    this.todoGroups.push(todoGroup);
+                    this.todoUI.removeOverlay();
+                    this.todoUI.renderGroups(this.todoGroups);
+                    this.#addRemoveGroupHandlers();
+                    this.currentGroup = this.todoGroups.at(-1);
+                    console.log(this.currentGroup);
+                }
+            });
+    }
+
+    /** Adds event handlers to remove buttons for removing todo groups. */
+    #addRemoveGroupHandlers()
     {
-        // TODO: Implement this function
+        const removeButtons = document.querySelectorAll(".todo-group-del");
+        removeButtons.forEach((button) => {
+            button.addEventListener("click", (e) => {
+                const groupItem = e.target.parentElement;
+                const index = Number(groupItem.getAttribute("data-index"));
+                this.todoGroups.splice(index, 1);
+                e.target.parentElement.remove();
+            })
+        })
     }
 }
 

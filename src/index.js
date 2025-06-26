@@ -3,5 +3,4 @@ import TodoManager from './modules/todoManager';
 
 
 const todoApp = new TodoManager("app");
-todoApp.addTodoGroup();
 

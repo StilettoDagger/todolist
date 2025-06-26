@@ -7,7 +7,6 @@ class TodoUI {
 	constructor(containerID) {
 		this.appContainer = document.getElementById(containerID);
 		this.#renderOverlay();
-		this.data = {};
 	}
 
 	// TODO: add methods to render a window for adding and editing todo groups and todo items.
@@ -23,7 +22,13 @@ class TodoUI {
 		todoGroupsList.innerHTML = "";
 		todoGroups.forEach((group, index) => {
 			const groupItem = document.createElement("li");
-			groupItem.textContent = group.groupName;
+			const groupNameEl = document.createElement("h3");
+			groupNameEl.textContent = group.groupName;
+			groupItem.appendChild(groupNameEl);
+			const groupDelButton = document.createElement("button");
+			groupDelButton.textContent  = "❌";
+			groupDelButton.className = "todo-group-del";
+			groupItem.appendChild(groupDelButton);
 			groupItem.className = "todo-group-item";
 			groupItem.setAttribute("data-index", index);
 			todoGroupsList.appendChild(groupItem);
@@ -106,7 +111,6 @@ class TodoUI {
 
 	renderAddGroupDialog() {
 		this.#toggleOverlay();
-		// TODO: Implement add group dialog
 		const dialogBody = document.querySelector(".dialog-body");
 		const dialogTitle = document.querySelector(".dialog-title");
 		dialogTitle.textContent = "Add a new group";
