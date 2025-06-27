@@ -33,6 +33,10 @@ class TodoUI {
 			const groupEditButton = document.createElement("button");
 			groupEditButton.innerHTML = `<span class="icon-[material-symbols--edit-square-outline]"></span>`;
 			groupEditButton.className = "todo-group-edit";
+			const groupInfoButton = document.createElement("button");
+			groupInfoButton.innerHTML = `<span class="icon-[material-symbols--info-outline]"></span>`
+			groupInfoButton.className = "todo-group-info";
+			groupButtons.appendChild(groupInfoButton);
 			groupButtons.appendChild(groupEditButton);
 			groupButtons.appendChild(groupDelButton);
 			groupItem.appendChild(groupButtons);
@@ -146,7 +150,7 @@ class TodoUI {
 		<form id="edit-group-form">
 			<div>
 				<label for="group-name">Group name:</label>
-				<input placeholder="${groupToEdit.getGroupName()}" type="text" name="group-name" id="group-name" required/>
+				<input placeholder="${groupToEdit.getGroupName()}" type="text" name="group-name" id="group-name"/>
 			</div>
 			<div>
 				<label for="group-desc">Briefly describe the group (optional):</label>
@@ -156,6 +160,26 @@ class TodoUI {
 		</form>
 		`;
 		return document.getElementById("edit-group-form");
+	}
+
+	renderGroupInfo(group) {
+		//TODO: Implement this function.
+		this.#toggleOverlay();
+		const dialogBody = document.querySelector(".dialog-body");
+		const dialogTitle = document.querySelector(".dialog-title");
+		dialogTitle.textContent = "Group Information";
+		dialogBody.innerHTML = `
+		<div class="group-info">
+			<div>
+				<h3>Group Name:</h3>
+				<p>${group.getGroupName()}</p>
+			</div>
+			<div>
+				<h3>Group Description:</h3>
+				<p>${group.getGroupDesc() ? group.getGroupDesc() : "No description."}</p>
+			</div>
+		</div>
+		`;
 	}
 }
 

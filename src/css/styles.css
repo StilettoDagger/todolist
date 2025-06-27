@@ -81,8 +81,12 @@ button span {
     @apply text-2xl
 }
 
+.todo-groups-list {
+    @apply flex flex-col gap-4;
+}
+
 .todo-group-item {
-    @apply font-normal flex justify-between flex-row items-center;
+    @apply text-gray-700 bg-sky-200 hover:bg-sky-300 border-gray-500 border rounded-xl p-2 font-normal flex justify-between flex-row items-center;
 }
 
 .todo-group-buttons {
@@ -95,4 +99,19 @@ button span {
 
 .todo-group-edit {
     @apply cursor-pointer text-green-600 hover:text-green-700;
+}
+
+.todo-group-info {
+    @apply cursor-pointer text-blue-700 hover:text-blue-900;
+}
+
+.group-info {
+    @apply flex flex-col gap-4;
+}
+.group-info h3 {
+    @apply font-bold;
+}
+
+.group-active {
+    @apply text-black border-0 border-l-red-400 border-l-4 bg-sky-300 hover:bg-sky-300 rounded-none rounded-r-2xl;
 }
