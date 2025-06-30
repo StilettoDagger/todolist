@@ -1,4 +1,8 @@
 class TodoItem {
+    #title;
+    #description;
+    #dueDate;
+    #isDone
     /**
      * Constructor for creating a new todo item.
      * @param {string} title - The name of the new todo item.
@@ -7,34 +11,46 @@ class TodoItem {
      */
     constructor(title, description, dueDate)
     {
-        this.title = title;
-        this.description = description;
-        this.dueDate = dueDate
-        this.isDone = false;
+        this.#title = title;
+        this.#description = description;
+        this.#dueDate = dueDate
+        this.#isDone = false;
     }
 
     /**
      * Toggles the status of the todo item.
+     * @returns a boolean value representing 'done' status.
      */
     toggleItem() {
-        this.isDone = !this.isDone;
+        this.#isDone = !this.#isDone;
+        return this.#isDone
+    }
+    
+    /** Gets the title of the todo item. */
+    getTitle() {
+        return this.#title;
     }
 
+    /** Gets the description of the todo item. */
+    getDesc() {
+        return this.#description;
+    }
     /**
      * Gets the due date string of the todo item.
      * @returns The due date of the todo item as a string.
-     */
+    */
     getDueDate() {
-        return this.dueDate.toDateString();
+        return this.#dueDate ? this.#dueDate.toDateString() : null;
     }
 
     setTitle(newTitle) {
-        this.title = newTitle;
+        this.#title = newTitle;
     }
 
     setDesc(newDesc) {
-        this.description = newDesc;
+        this.#description = newDesc;
     }
+
 }
 
 export default TodoItem;

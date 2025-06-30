@@ -11,9 +11,11 @@ class TodoGroup {
 
     /**
      * Adds a new todo item to the todo list within this group
-     * @param {Object} todoObj - Todo objects which includes properties for title, description, and optionally a due date. 
+     * @param {string} title - The name of the todo item.
+     * @param {string} description - The description of the todo item.
+     * @param {string} dueDate - The due date of the todo item.
      */
-	addTodo({title, description, dueDate = null}) {
+	addTodo(title, description, dueDate) {
         const todoItem = new TodoItem(title, description, dueDate);
         this.todos.push(todoItem);
     }

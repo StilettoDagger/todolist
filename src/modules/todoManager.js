@@ -1,4 +1,5 @@
 import TodoGroup from "./todoGroup";
+import TodoItem from "./todoItem";
 import TodoUI from "./todoUI";
 
 /**
@@ -14,8 +15,8 @@ class TodoManager {
 		this.#addNewGroupHandler();
 	}
 
-	// TODO: add event handlers for UI elements (switching groups and toggling todos)
-	// TODO: add functionality to add, edit, and remove todos and todo groups.
+	// TODO: add functionality for viewing todo lists in a group
+    // TODO: add functionality for toggling todos in a todo list
 
 	/**
 	 * Adds a handler for the button responsible for creating a new todo group
@@ -40,6 +41,12 @@ class TodoManager {
 				const groupName = groupNameInput.value;
 				const groupDesc = groupDescInput.value;
 
+				if (this.todoGroups.length === 0)
+				{
+					this.todoUI.renderTodoDiv(this.currentGroup);
+					this.#addNewTodoHandler();
+				}
+
 				const todoGroup = new TodoGroup(groupName, groupDesc);
 				this.todoGroups.push(todoGroup);
 				this.todoUI.removeOverlay();
@@ -56,8 +63,6 @@ class TodoManager {
 					);
 				}
 				this.currentGroupEl.classList.toggle("group-active");
-				console.log(this.currentGroup);
-				console.log(this.currentGroupEl);
 			}
 		});
 	}
@@ -76,12 +81,11 @@ class TodoManager {
 				if (groupItem === this.currentGroupEl) {
 					this.currentGroup = null;
 					this.currentGroupEl = null;
-				} else {
-					const groupIndex = this.todoGroups.indexOf(this.currentGroup);
-					this.currentGroupEl = document.querySelector(
-						`li[data-index="${groupIndex}"]`
-					);
-					this.currentGroupEl.classList.toggle("group-active");
+				}
+				this.todoUI.renderTodos(this.currentGroup);
+				if (this.todoGroups.length === 0)
+				{
+					this.todoUI.renderNoGroupsMessage();
 				}
 			});
 		});
@@ -157,13 +161,17 @@ class TodoManager {
 
 				const groupSelected = e.target.closest("li[data-index]");
 				const groupIndex = Number(groupSelected.getAttribute("data-index"));
-				if (groupSelected !== this.currentGroupEl) {
-					this.currentGroupEl.classList.toggle("group-active");
-					this.currentGroupEl = groupSelected;
-					this.currentGroup = this.todoGroups[groupIndex];
+				if (this.currentGroupEl === groupSelected)
+				{
+					return;
+				}
+				if (this.currentGroupEl) {
 					this.currentGroupEl.classList.toggle("group-active");
 				}
-                console.log(this.currentGroup);
+				this.currentGroupEl = groupSelected;
+				this.currentGroup = this.todoGroups[groupIndex];
+				this.currentGroupEl.classList.toggle("group-active");
+				this.todoUI.renderTodos(this.currentGroup);
 			});
 		});
 	}
@@ -175,6 +183,34 @@ class TodoManager {
 		this.#addEditGroupHandlers();
 		this.#addGroupInfoHandlers();
         this.#addGroupSwitchHandlers();
+	}
+
+	#addNewTodoHandler() {
+		const todoButton = document.getElementById("add-new-todo");
+		todoButton.addEventListener("click", (e) => {
+			const todoForm = this.todoUI.renderAddTodoDialog(this.currentGroup);
+			this.#addNewTodoSubmitHandler(todoForm);
+		})
+	}
+
+	#addNewTodoSubmitHandler(todoForm) {
+		todoForm.addEventListener("submit", (e) => {
+			e.preventDefault();
+
+			if (todoForm.checkValidity())
+			{
+				const todoNameInput = document.getElementById("todo-name");
+				const todoDescInput = document.getElementById("todo-desc");
+				const todoDueDate = document.getElementById("todo-date");
+				const todoName = todoNameInput.value;
+				const todoDesc = todoDescInput.value;
+				const todoDate = todoDueDate.value ? new Date (todoDueDate.value) : null;
+
+				this.currentGroup.addTodo(todoName, todoDesc, todoDate);
+				this.todoUI.removeOverlay();
+				this.todoUI.renderTodos(this.currentGroup);
+			}
+		})
 	}
 }
 

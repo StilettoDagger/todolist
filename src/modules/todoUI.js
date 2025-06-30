@@ -9,8 +9,8 @@ class TodoUI {
 		this.#renderOverlay();
 	}
 
-	// TODO: add methods to render a window for adding and editing todo groups and todo items.
-	// TODO: add UI elements to add, edit and remove todos and todo groups in the renderMethods.
+	// TODO: add method to render todo lists
+	// TODO: add method to create and edit todos in a todo list
 
 	/**
 	 * Renders the todo groups section of the application
@@ -28,13 +28,13 @@ class TodoUI {
 			const groupButtons = document.createElement("div");
 			groupButtons.className = "todo-group-buttons";
 			const groupDelButton = document.createElement("button");
-			groupDelButton.innerHTML  = `<span class="icon-[material-symbols--delete-outline]"></span>`;
+			groupDelButton.innerHTML = `<span class="icon-[material-symbols--delete-outline]"></span>`;
 			groupDelButton.className = "todo-group-del";
 			const groupEditButton = document.createElement("button");
 			groupEditButton.innerHTML = `<span class="icon-[material-symbols--edit-square-outline]"></span>`;
 			groupEditButton.className = "todo-group-edit";
 			const groupInfoButton = document.createElement("button");
-			groupInfoButton.innerHTML = `<span class="icon-[material-symbols--info-outline]"></span>`
+			groupInfoButton.innerHTML = `<span class="icon-[material-symbols--info-outline]"></span>`;
 			groupInfoButton.className = "todo-group-info";
 			groupButtons.appendChild(groupInfoButton);
 			groupButtons.appendChild(groupEditButton);
@@ -46,6 +46,18 @@ class TodoUI {
 		});
 	}
 
+	renderTodoDiv(todoGroup) {
+		const todosDiv = this.appContainer.querySelector(".todo-main");
+		todosDiv.innerHTML = `
+            <div class="todo-main-header">
+                <button id="add-new-todo"><span class="icon-[material-symbols--add]"></span>New todo</button>
+				<h2>📃Todos</h3>
+            </div>
+            <ul class="todo-list">
+            </ul>
+		`;
+	}
+
 	/**
 	 * Renders the todo list section of the application given a todo group.
 	 * @param {TodoGroup} todoGroup - The currently active group which contains the todo list.
@@ -54,24 +66,35 @@ class TodoUI {
 		const todoList = this.appContainer.querySelector(".todo-list");
 		// Start by clearing the todo list from previous groups to update it with the current one.
 		todoList.innerHTML = "";
+		if (todoGroup === null)
+		{
+			return;
+		}
 		const todos = todoGroup.todos;
 		todos.forEach((todo, index) => {
 			const todoItem = document.createElement("li");
 			todoItem.setAttribute("data-index", index);
 			todoItem.className = "todo-item";
+			const todoInfo = document.createElement("div");
+			todoInfo.className = "todo-info";
 			const todoTitle = document.createElement("h3");
-			todoTitle.textContent = todo.title;
+			todoTitle.textContent = todo.getTitle();
 			todoTitle.className = "todo-title";
-			todoItem.appendChild(todoTitle);
+			todoInfo.appendChild(todoTitle);
 			const todoDesc = document.createElement("p");
-			todoDesc.textContent = todo.description;
+			todoDesc.textContent = todo.getDesc() ? todo.getDesc() : "No description";
 			todoDesc.className = "todo-desc";
-			todoItem.appendChild(todoDesc);
+			todoInfo.appendChild(todoDesc);
 			const todoDueDate = document.createElement("p");
 			todoDueDate.textContent = `Due Date: ${
-				todo.dueDate ? todo.getDueDate() : "No due date"
+				todo.getDueDate() ? todo.getDueDate() : "No due date"
 			}`;
-			todoItem.appendChild(todoDueDate);
+			const todoCheck = document.createElement("button");
+			todoCheck.className = "todo-check";
+			todoCheck.innerHTML = `<span class="icon-[mdi--checkbox-blank-outline]"></span>`;
+			todoInfo.appendChild(todoDueDate);
+			todoItem.appendChild(todoInfo);
+			todoItem.appendChild(todoCheck);
 			todoList.appendChild(todoItem);
 		});
 	}
@@ -90,11 +113,13 @@ class TodoUI {
 		</div>
 		`;
 		this.overlay.addEventListener("click", (e) => {
-			if (e.target === e.currentTarget && e.target.classList.contains("overlay-active"))
-			{
+			if (
+				e.target === e.currentTarget &&
+				e.target.classList.contains("overlay-active")
+			) {
 				this.removeOverlay();
 			}
-		})
+		});
 	}
 
 	/**
@@ -163,7 +188,6 @@ class TodoUI {
 	}
 
 	renderGroupInfo(group) {
-		//TODO: Implement this function.
 		this.#toggleOverlay();
 		const dialogBody = document.querySelector(".dialog-body");
 		const dialogTitle = document.querySelector(".dialog-title");
@@ -180,6 +204,42 @@ class TodoUI {
 			</div>
 		</div>
 		`;
+	}
+
+	renderNoGroupsMessage()
+	{
+		const todosDiv = this.appContainer.querySelector(".todo-main");
+		todosDiv.innerHTML = `
+            <p class="no-groups-msg">No todo groups found. Start by creating a new todo group to add todos.</p>
+		`;
+	}
+
+	renderAddTodoDialog(group) {
+		this.#toggleOverlay();
+		const dialogBody = document.querySelector(".dialog-body");
+		const dialogTitle = document.querySelector(".dialog-title");
+		dialogTitle.textContent = `Add todo to ${group.getGroupName()}`;
+		dialogBody.innerHTML = `
+		<form id="add-todo-form">
+			<div>
+				<label for="todo-name">Todo name:</label>
+				<input type="text" name="todo-name" id="todo-name" required/>
+			</div>
+			<div>
+				<label for="todo-desc">Briefly describe the todo item (optional):</label>
+				<textarea class="resize-none" id="todo-desc"></textarea>
+			</div>
+			<div>
+				<label for="todo-date">Due date (optional)</label>
+				<input type="date" name="todo-date" id="todo-date"/>
+			<button type="submit">Add todo</button>
+		</form>
+		`;
+
+		const dueDateInput = document.getElementById("todo-date");
+		const today = new Date();
+		dueDateInput.min = today.toISOString().substring(0, 10);
+		return document.getElementById("add-todo-form");
 	}
 }
 

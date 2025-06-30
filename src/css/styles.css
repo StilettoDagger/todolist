@@ -10,6 +10,11 @@
     --color-todos: #7ABAF2;
 }
 
+/* 
+TODO: Improve UI and CSS layout
+TODO: Make layout more responsive 
+*/
+
 html,
 body {
     @apply h-screen;
@@ -36,7 +41,43 @@ body {
 }
 
 .todo-main {
-    @apply col-span-3 bg-todos;
+    @apply relative col-span-3 bg-todos;
+}
+
+.no-groups-msg {
+    @apply absolute bottom-1/2 text-3xl text-black/50 italic text-center;
+}
+
+.todo-main-header {
+    @apply grid grid-cols-3 place-items-center justify-center text-3xl text-center border-b-1 border-gray-600 p-4 font-bold;
+}
+
+#add-new-todo {
+    @apply flex flex-row items-center text-xl bg-green-600 rounded-full text-gray-100 cursor-pointer p-2 hover:bg-green-700;
+}
+
+.todo-item {
+    @apply grid grid-cols-[auto_1fr] grid-rows-3 gap-4 text-neutral-700 bg-gray-300 m-4 p-3 rounded-2xl border-2 border-yellow-500;
+}
+
+.todo-info {
+    @apply flex flex-col gap-1 row-span-3 col-start-2 col-end-3;
+}
+
+.todo-check {
+    @apply place-self-start self-center col-start-1 col-end-2 row-start-1 row-end-4;
+}
+
+.todo-check span {
+    @apply text-3xl;
+}
+
+.todo-title {
+    @apply text-black text-xl;
+}
+
+.todo-desc {
+    @apply italic;
 }
 
 .overlay {
@@ -86,15 +127,15 @@ button span {
 }
 
 .todo-group-item {
-    @apply text-gray-700 bg-sky-200 hover:bg-sky-300 border-gray-500 border rounded-xl p-2 font-normal flex justify-between flex-row items-center;
+    @apply text-gray-700 bg-sky-200 hover:bg-sky-300 border-gray-500 border rounded-xl p-2 font-normal grid grid-cols-2 break-words;
 }
 
 .todo-group-buttons {
-    @apply flex flex-row gap-1 items-center;
+    @apply flex flex-row justify-end gap-1 items-center flex-wrap;
 }
 
 .todo-group-del {
-    @apply cursor-pointer mx-auto text-red-600 hover:text-red-700;
+    @apply cursor-pointer text-red-600 hover:text-red-700;
 }
 
 .todo-group-edit {
