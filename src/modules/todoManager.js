@@ -15,8 +15,8 @@ class TodoManager {
 		this.#addNewGroupHandler();
 	}
 
-	// TODO: add functionality for viewing todo lists in a group
     // TODO: add functionality for toggling todos in a todo list
+	// TODO: add functionality for editing and removing todos
 
 	/**
 	 * Adds a handler for the button responsible for creating a new todo group
@@ -43,7 +43,7 @@ class TodoManager {
 
 				if (this.todoGroups.length === 0)
 				{
-					this.todoUI.renderTodoDiv(this.currentGroup);
+					this.todoUI.renderTodoDiv();
 					this.#addNewTodoHandler();
 				}
 
@@ -172,6 +172,7 @@ class TodoManager {
 				this.currentGroup = this.todoGroups[groupIndex];
 				this.currentGroupEl.classList.toggle("group-active");
 				this.todoUI.renderTodos(this.currentGroup);
+				this.#addTodoEditHandlers();
 			});
 		});
 	}
@@ -209,6 +210,69 @@ class TodoManager {
 				this.currentGroup.addTodo(todoName, todoDesc, todoDate);
 				this.todoUI.removeOverlay();
 				this.todoUI.renderTodos(this.currentGroup);
+				this.#addTodoEditHandlers();
+			}
+		})
+	}
+
+	#addTodoEditHandlers()
+	{
+		const todoItems = document.querySelectorAll(".todo-item");
+
+		todoItems.forEach((todoItem) => {
+			const todoIndex = Number(todoItem.getAttribute("data-index"));
+			const todo = this.currentGroup.getTodo(todoIndex);
+			const editButtons = todoItem.querySelectorAll(".todo-edit");
+			editButtons.forEach((editButton) => {
+				let fieldType = "";
+				if (editButton.classList.contains("todo-edit-title"))
+				{
+					fieldType = "title";
+				}
+				else if (editButton.classList.contains("todo-edit-desc"))
+				{
+					fieldType = "desc";
+				}
+				else if (editButton.classList.contains("todo-edit-date"))
+				{
+					fieldType = "date";
+				}
+				editButton.addEventListener("click", (e) => {
+					e.stopPropagation();
+
+					const todoEditForm = this.todoUI.renderTodoEdit(todo, fieldType);
+					this.#addTodoEditSubmitHandler(todoEditForm, todo, fieldType);
+				})
+			})
+		})
+	}
+
+	#addTodoEditSubmitHandler(todoEditForm, todo, fieldType)
+	{
+		todoEditForm.addEventListener("submit", (e) => {
+			e.preventDefault();
+
+			if (todoEditForm.checkValidity())
+			{
+				const fieldInput = document.getElementById(`todo-${fieldType}-input`);
+				const fieldValue = fieldInput.value ? fieldInput.value : fieldInput.placeholder;
+
+				switch (fieldType) {
+					case "title":
+						todo.setTitle(fieldValue);
+						break;
+					case "desc":
+						todo.setDesc(fieldValue);
+						break;
+					case "date":
+						todo.setDate(fieldValue);
+						break;
+					default:
+						break;
+				}
+				this.todoUI.removeOverlay();
+				this.todoUI.renderTodos(this.currentGroup);
+				this.#addTodoEditHandlers();
 			}
 		})
 	}

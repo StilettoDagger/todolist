@@ -51,6 +51,10 @@ class TodoItem {
         this.#description = newDesc;
     }
 
+    setDate(newDate) {
+        this.#dueDate = new Date(newDate);
+    }
+
 }
 
 export default TodoItem;

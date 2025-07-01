@@ -43,6 +43,10 @@ class TodoGroup {
     getGroupDesc() {
         return this.#groupDesc;
     }
+
+    getTodo(index) {
+        return this.todos[index];
+    }
 }
 
 export default TodoGroup;
