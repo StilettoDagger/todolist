@@ -48,6 +48,10 @@ class TodoManager {
 				}
 
 				const todoGroup = new TodoGroup(groupName, groupDesc);
+				if (this.todoGroups.length === 0)
+				{
+					todoGroup.toggleActive();
+				}
 				this.todoGroups.push(todoGroup);
 				this.todoUI.removeOverlay();
 				this.#renderAndAddHandlers();
@@ -62,7 +66,6 @@ class TodoManager {
 						`li[data-index="${groupIndex}"]`
 					);
 				}
-				this.currentGroupEl.classList.toggle("group-active");
 			}
 		});
 	}
@@ -78,13 +81,9 @@ class TodoManager {
 				const index = Number(groupItem.getAttribute("data-index"));
 				this.todoGroups.splice(index, 1);
                 this.#renderAndAddHandlers();
-				if (groupItem === this.currentGroupEl) {
+				if (this.todoGroups.length === 0 || groupItem === this.currentGroupEl) {
 					this.currentGroup = null;
 					this.currentGroupEl = null;
-				}
-				this.todoUI.renderTodos(this.currentGroup);
-				if (this.todoGroups.length === 0)
-				{
 					this.todoUI.renderNoGroupsMessage();
 				}
 			});
@@ -165,14 +164,17 @@ class TodoManager {
 				{
 					return;
 				}
-				if (this.currentGroupEl) {
-					this.currentGroupEl.classList.toggle("group-active");
+				if (this.currentGroup) {
+					this.currentGroup.toggleActive();
 				}
-				this.currentGroupEl = groupSelected;
 				this.currentGroup = this.todoGroups[groupIndex];
-				this.currentGroupEl.classList.toggle("group-active");
+				this.currentGroup.toggleActive();
+				this.#renderAndAddHandlers();
+				this.currentGroupEl = document.querySelector(".group-active");
+				this.todoUI.renderTodoDiv();
+				this.#addNewTodoHandler();
 				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoEditHandlers();
+				this.#addTodoButtonHandlers();				
 			});
 		});
 	}
@@ -210,7 +212,7 @@ class TodoManager {
 				this.currentGroup.addTodo(todoName, todoDesc, todoDate);
 				this.todoUI.removeOverlay();
 				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoEditHandlers();
+				this.#addTodoButtonHandlers();
 			}
 		})
 	}
@@ -272,9 +274,30 @@ class TodoManager {
 				}
 				this.todoUI.removeOverlay();
 				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoEditHandlers();
+				this.#addTodoButtonHandlers();
 			}
 		})
+	}
+
+	#addTodoToggleHandlers()
+	{
+		const todoToggleButtons = document.querySelectorAll(".todo-check");
+
+		todoToggleButtons.forEach((todoToggleButton) => {
+			const todoIndex = Number(todoToggleButton.closest("li[data-index]").getAttribute("data-index"));
+			const todo = this.currentGroup.getTodo(todoIndex);
+			todoToggleButton.addEventListener("click", (e) => {
+				todo.toggleItem();
+				this.todoUI.renderTodos(this.currentGroup);
+				this.#addTodoButtonHandlers();
+			})
+		})
+	}
+
+	#addTodoButtonHandlers()
+	{
+		this.#addTodoEditHandlers();
+		this.#addTodoToggleHandlers();
 	}
 }
 

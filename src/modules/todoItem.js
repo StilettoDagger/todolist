@@ -43,6 +43,10 @@ class TodoItem {
         return this.#dueDate ? this.#dueDate.toDateString() : null;
     }
 
+    isChecked() {
+        return this.#isDone;
+    }
+
     setTitle(newTitle) {
         this.#title = newTitle;
     }
@@ -52,7 +56,14 @@ class TodoItem {
     }
 
     setDate(newDate) {
-        this.#dueDate = new Date(newDate);
+        if (newDate === "null")
+        {
+            this.#dueDate = null;
+        }
+        else
+        {
+            this.#dueDate = new Date(newDate);
+        }
     }
 
 }

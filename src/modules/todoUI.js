@@ -41,6 +41,14 @@ class TodoUI {
 			groupButtons.appendChild(groupDelButton);
 			groupItem.appendChild(groupButtons);
 			groupItem.className = "todo-group-item";
+			if (group.isActive())
+			{
+				groupItem.classList.add("group-active");
+			}
+			else
+			{
+				groupItem.classList.remove("group-active");
+			}
 			groupItem.setAttribute("data-index", index);
 			todoGroupsList.appendChild(groupItem);
 		});
@@ -74,25 +82,41 @@ class TodoUI {
 			const todoItem = document.createElement("li");
 			todoItem.setAttribute("data-index", index);
 			todoItem.className = "todo-item";
+			if (todo.isChecked())
+			{
+				todoItem.classList.add("checked");
+			}
+			else
+			{
+				todoItem.classList.remove("checked");
+			}
 			const todoInfo = document.createElement("div");
 			todoInfo.className = "todo-info";
 			const todoTitle = document.createElement("h3");
-			todoTitle.innerHTML = `${todo.getTitle()}<button class="todo-edit todo-edit-title"><span class="icon-[material-symbols--edit-square-outline]"></span></button>`;
+			todoTitle.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-title"><span class="icon-[material-symbols--edit-square-outline]"></span></button>${todo.getTitle()}`;
 			todoTitle.className = "todo-title";
 			todoInfo.appendChild(todoTitle);
 			const todoDesc = document.createElement("p");
-			todoDesc.innerHTML = `${
+			todoDesc.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-desc"><span class="icon-[material-symbols--edit-square-outline]"></span></button>${
 				todo.getDesc() ? todo.getDesc() : "No description"
-			}<button class="todo-edit todo-edit-desc"><span class="icon-[material-symbols--edit-square-outline]"></span></button>`;
+			}`;
 			todoDesc.className = "todo-desc";
 			todoInfo.appendChild(todoDesc);
 			const todoDueDate = document.createElement("p");
-			todoDueDate.innerHTML = `Due Date: ${
+			todoDueDate.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-date"><span class="icon-[material-symbols--edit-square-outline]"></span></button>Due Date: ${
 				todo.getDueDate() ? todo.getDueDate() : "No due date"
-			}<button class="todo-edit todo-edit-data"><span class="icon-[material-symbols--edit-square-outline]"></span></button>`;
+			}`;
 			const todoCheck = document.createElement("button");
 			todoCheck.className = "todo-check";
-			todoCheck.innerHTML = `<span class="icon-[mdi--checkbox-blank-outline]"></span>`;
+			if (todo.isChecked())
+			{
+				todoCheck.classList.add("checked");
+			}
+			else
+			{
+				todoCheck.classList.remove("checked");
+			}
+			todoCheck.innerHTML = `${!todo.isChecked() ? '<span class="icon-[mdi--checkbox-blank-outline]"></span>': '<span class="icon-[mdi--checkbox-outline]"></span>'}`;
 			todoInfo.appendChild(todoDueDate);
 			todoItem.appendChild(todoInfo);
 			todoItem.appendChild(todoCheck);

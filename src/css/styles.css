@@ -60,16 +60,29 @@ body {
     @apply grid grid-cols-[auto_1fr] grid-rows-3 gap-4 text-neutral-700 bg-gray-300 m-4 p-3 rounded-2xl border-2 border-yellow-500;
 }
 
+.todo-item.checked, .todo-item.checked .todo-title {
+    @apply text-neutral-500 line-through;
+}
+
 .todo-info {
     @apply flex flex-col gap-1 row-span-3 col-start-2 col-end-3;
+}
+
+.todo-edit {
+    @apply cursor-pointer text-green-700 hover:text-green-800;
 }
 
 .todo-info > * {
     @apply flex flex-row items-center gap-2;
 }
 
+.todo-info button:disabled
+{
+    @apply invisible;
+}
+
 .todo-check {
-    @apply place-self-start self-center col-start-1 col-end-2 row-start-1 row-end-4;
+    @apply text-black place-self-start self-center col-start-1 col-end-2 row-start-1 row-end-4;
 }
 
 .todo-check span {

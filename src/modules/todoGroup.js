@@ -3,10 +3,12 @@ import TodoItem from "./todoItem";
 class TodoGroup {
     #groupName;
     #groupDesc;
+    #isActive
 	constructor(groupName, groupDesc) {
 		this.#groupName = groupName;
 		this.#groupDesc = groupDesc;
 		this.todos = [];
+        this.#isActive = false;
 	}
 
     /**
@@ -46,6 +48,14 @@ class TodoGroup {
 
     getTodo(index) {
         return this.todos[index];
+    }
+
+    isActive() {
+        return this.#isActive;
+    }
+
+    toggleActive() {
+        this.#isActive = !this.#isActive;
     }
 }
 
