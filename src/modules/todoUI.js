@@ -135,7 +135,10 @@ class TodoUI {
 		document.body.appendChild(this.overlay);
 		this.overlay.innerHTML = `
 		<div class="dialog">
-			<h2 class="dialog-title"></h2>
+			<div class="dialog-header">
+				<button class="close-dialog"><span class="icon-[mdi--close-circle-outline]"></span></button>
+				<h2 class="dialog-title"></h2>
+			</div>
 			<div class="dialog-body"></div>
 		</div>
 		`;
@@ -146,6 +149,10 @@ class TodoUI {
 			) {
 				this.removeOverlay();
 			}
+		});
+		const closeOverlayButton = document.querySelector(".close-dialog");
+		closeOverlayButton.addEventListener("click", (e) => {
+			this.removeOverlay();
 		});
 	}
 
@@ -160,10 +167,17 @@ class TodoUI {
 	#clearOverlay() {
 		this.overlay.innerHTML = `
 		<div class="dialog">
-			<h2 class="dialog-title"></h2>
+			<div class="dialog-header">
+				<button class="close-dialog"><span class="icon-[mdi--close-circle-outline]"></span></button>
+				<h2 class="dialog-title"></h2>
+			</div>
 			<div class="dialog-body"></div>
 		</div>
 		`;
+		const closeOverlayButton = document.querySelector(".close-dialog");
+		closeOverlayButton.addEventListener("click", (e) => {
+			this.removeOverlay();
+		});
 	}
 
 	/** Hides the overlay and clears its content */
@@ -291,13 +305,13 @@ class TodoUI {
 			default:
 				break;
 		}
-		dialogTitle.textContent = `Edit todo's ${fieldType}`;
+		dialogTitle.textContent = `Edit todo's ${fieldType === "desc" ? "description" : fieldType}`;
 		dialogBody.innerHTML = `
 		<form id="todo-edit-form">
 			<div>
 				${inputEl}
 			</div>
-			<button type="submit">Edit ${fieldType}</button>
+			<button type="submit">Edit ${fieldType === "desc" ? "description" : fieldType}</button>
 		</form>
 		`;
 		return document.getElementById("todo-edit-form");
