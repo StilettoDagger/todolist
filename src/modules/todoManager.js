@@ -15,8 +15,7 @@ class TodoManager {
 		this.#addNewGroupHandler();
 	}
 
-    // TODO: add functionality for toggling todos in a todo list
-	// TODO: add functionality for editing and removing todos
+    // TODO: add functionality for removing todos in a todo list
 
 	/**
 	 * Adds a handler for the button responsible for creating a new todo group
@@ -211,6 +210,7 @@ class TodoManager {
 
 				this.currentGroup.addTodo(todoName, todoDesc, todoDate);
 				this.todoUI.removeOverlay();
+				console.log(this.currentGroup.todos);
 				this.todoUI.renderTodos(this.currentGroup);
 				this.#addTodoButtonHandlers();
 			}
@@ -294,10 +294,25 @@ class TodoManager {
 		})
 	}
 
+	#addTodoRemoveHandlers()
+	{
+		const todoRemoveButtons = document.querySelectorAll(".todo-del");
+
+		todoRemoveButtons.forEach((todoRemoveButton) => {
+			const todoIndex = Number(todoRemoveButton.closest("li[data-index]").getAttribute("data-index"));
+			todoRemoveButton.addEventListener("click", (e) => {
+				this.currentGroup.removeTodo(todoIndex);
+				this.todoUI.renderTodos(this.currentGroup);
+				this.#addTodoButtonHandlers();
+			})
+		})
+	}
+
 	#addTodoButtonHandlers()
 	{
 		this.#addTodoEditHandlers();
 		this.#addTodoToggleHandlers();
+		this.#addTodoRemoveHandlers();
 	}
 }
 

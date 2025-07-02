@@ -57,7 +57,7 @@ body {
 }
 
 .todo-item {
-    @apply grid grid-cols-[auto_1fr] grid-rows-3 gap-4 text-neutral-700 bg-gray-300 m-4 p-3 rounded-2xl border-2 border-yellow-500;
+    @apply grid grid-cols-[auto_1fr_auto] auto-rows-auto items-center gap-4 text-neutral-700 bg-gray-300 m-4 p-3 rounded-2xl border-2 border-yellow-500;
 }
 
 .todo-item.checked, .todo-item.checked .todo-title {
@@ -65,15 +65,19 @@ body {
 }
 
 .todo-info {
-    @apply flex flex-col gap-1 row-span-3 col-start-2 col-end-3;
+    @apply min-w-0 flex flex-col self-center gap-1 row-span-3 col-start-2 col-end-3;
 }
 
 .todo-edit {
-    @apply cursor-pointer text-green-700 hover:text-green-800;
+    @apply invisible cursor-pointer text-green-700 hover:text-green-800 group-hover/edit:visible;
 }
 
 .todo-info > * {
-    @apply flex flex-row items-center gap-2;
+    @apply flex flex-row gap-2;
+}
+
+.todo-desc, .todo-title {
+    @apply break-all;
 }
 
 .todo-info button:disabled
@@ -82,10 +86,14 @@ body {
 }
 
 .todo-check {
-    @apply text-black place-self-start self-center col-start-1 col-end-2 row-start-1 row-end-4;
+    @apply text-gray-700 self-start col-start-1 col-end-2 row-start-2 row-end-3 cursor-pointer hover:text-black;
 }
 
-.todo-check span {
+.todo-del {
+    @apply invisible text-red-600 col-start-3 col-end-4 row-start-2 row-end-3 cursor-pointer hover:text-red-700 group-hover/item:visible;
+}
+
+.todo-check span, .todo-del span {
     @apply text-3xl;
 }
 

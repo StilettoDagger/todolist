@@ -9,9 +9,6 @@ class TodoUI {
 		this.#renderOverlay();
 	}
 
-	// TODO: add method to edit todos in a todo list
-	// TODO: add methods to toggle todos in a todo list
-
 	/**
 	 * Renders the todo groups section of the application
 	 * @param {Array} todoGroups - An array of todo groups.
@@ -81,7 +78,7 @@ class TodoUI {
 		todos.forEach((todo, index) => {
 			const todoItem = document.createElement("li");
 			todoItem.setAttribute("data-index", index);
-			todoItem.className = "todo-item";
+			todoItem.classList.add("todo-item", "group/item");
 			if (todo.isChecked())
 			{
 				todoItem.classList.add("checked");
@@ -91,23 +88,24 @@ class TodoUI {
 				todoItem.classList.remove("checked");
 			}
 			const todoInfo = document.createElement("div");
-			todoInfo.className = "todo-info";
+			todoInfo.classList.add("todo-info");
 			const todoTitle = document.createElement("h3");
 			todoTitle.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-title"><span class="icon-[material-symbols--edit-square-outline]"></span></button>${todo.getTitle()}`;
-			todoTitle.className = "todo-title";
+			todoTitle.classList.add("todo-title", "group/edit");
 			todoInfo.appendChild(todoTitle);
 			const todoDesc = document.createElement("p");
 			todoDesc.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-desc"><span class="icon-[material-symbols--edit-square-outline]"></span></button>${
 				todo.getDesc() ? todo.getDesc() : "No description"
 			}`;
-			todoDesc.className = "todo-desc";
+			todoDesc.classList.add("todo-desc", "group/edit");
 			todoInfo.appendChild(todoDesc);
 			const todoDueDate = document.createElement("p");
 			todoDueDate.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-date"><span class="icon-[material-symbols--edit-square-outline]"></span></button>Due Date: ${
 				todo.getDueDate() ? todo.getDueDate() : "No due date"
 			}`;
+			todoDueDate.classList.add("todo-date", "group/edit");
 			const todoCheck = document.createElement("button");
-			todoCheck.className = "todo-check";
+			todoCheck.classList.add("todo-check");
 			if (todo.isChecked())
 			{
 				todoCheck.classList.add("checked");
@@ -117,9 +115,13 @@ class TodoUI {
 				todoCheck.classList.remove("checked");
 			}
 			todoCheck.innerHTML = `${!todo.isChecked() ? '<span class="icon-[mdi--checkbox-blank-outline]"></span>': '<span class="icon-[mdi--checkbox-outline]"></span>'}`;
+			const todoDel = document.createElement("button");
+			todoDel.className = "todo-del";
+			todoDel.innerHTML = `<span class="icon-[mdi--remove]"></span>`;
 			todoInfo.appendChild(todoDueDate);
 			todoItem.appendChild(todoInfo);
 			todoItem.appendChild(todoCheck);
+			todoItem.appendChild(todoDel);
 			todoList.appendChild(todoItem);
 		});
 	}
@@ -272,17 +274,20 @@ class TodoUI {
 		const dialogBody = document.querySelector(".dialog-body");
 		const dialogTitle = document.querySelector(".dialog-title");
 		let fieldValue = "";
-		let inputType = "text";
+		let inputEl = "";
 		switch (fieldType) {
 			case "title":
 				fieldValue = todo.getTitle();
+				inputEl = `<input placeholder="${fieldValue}" type="text" name="todo-${fieldType}-input" id="todo-${fieldType}-input"/>`;
 				break;
 			case "desc":
 				fieldValue = todo.getDesc();
+				inputEl = `<textarea class="resize-none" placeholder="${fieldValue}" name="todo-${fieldType}-input" id="todo-${fieldType}-input"></textarea>`;
 				break;
 			case "date":
 				fieldValue = todo.getDueDate();
-				inputType = "date"
+				const today = new Date().toISOString().substring(0, 10);
+				inputEl = `<input min="${today}" placeholder="${fieldValue}" type="date" name="todo-${fieldType}-input" id="todo-${fieldType}-input"/>`;
 			default:
 				break;
 		}
@@ -290,17 +295,11 @@ class TodoUI {
 		dialogBody.innerHTML = `
 		<form id="todo-edit-form">
 			<div>
-				<input placeholder="${fieldValue}" type="${inputType}" name="todo-${fieldType}-input" id="todo-${fieldType}-input"/>
+				${inputEl}
 			</div>
 			<button type="submit">Edit ${fieldType}</button>
 		</form>
 		`;
-		if (fieldType === "date")
-		{
-			const dateInput = document.getElementById("todo-date-input");
-			const today = new Date().toISOString().substring(0, 10);
-			dateInput.min = today;
-		}
 		return document.getElementById("todo-edit-form");
 	}
 }
