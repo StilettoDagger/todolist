@@ -6,17 +6,30 @@
     <title>Test</title>
 </head>
 <body>
+    <div class="app-container">
     <h1 id="app-title">Todolist</h1>
-    <div id="app">
-        <div class="todo-groups">
-            <h2>Todo Groups</h2>
-            <ul class="todo-groups-list">
-            </ul>
-            <button id="add-new-group"><span class="icon-[material-symbols--add]"></span>New Group</button>
-        </div>
-        <div class="todo-main">
-            <p class="no-groups-msg">No todo groups found. Start by creating a new todo group to add todos.</p>
-        </div>
+        <main id="app">
+            <div class="todo-groups">
+                <h2 class="todo-groups-header">
+                    Todo Groups
+                    <button id="group-toggle-btn">
+                        <span class="icon-[mdi--expand-more]"></span>
+                    </button>
+                </h2>
+                <h3 class="current-group">Current Group: <span class="current-group-name">None</span></h3>
+                <ul class="todo-groups-list"></ul>
+                <button id="add-new-group">
+                    <span class="icon-[material-symbols--add]"></span>
+                    <span class="button-desc">New Group</span>
+                </button>
+            </div>
+            <div class="todo-main-header off"></div>
+            <div class="todo-main">
+                <p class="empty-msg">No todo groups found. Start by creating a new todo group to add todos.</p>
+                <ul class="todo-list">
+                </ul>
+            </div>
+        </main>
     </div>
 </body>
 </html>

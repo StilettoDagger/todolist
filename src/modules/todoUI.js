@@ -52,15 +52,14 @@ class TodoUI {
 	}
 
 	renderTodoDiv() {
-		const todosDiv = this.appContainer.querySelector(".todo-main");
-		todosDiv.innerHTML = `
-            <div class="todo-main-header">
-                <button id="add-new-todo"><span class="icon-[material-symbols--add]"></span>New todo</button>
-				<h2>📃Todos</h3>
-            </div>
-            <ul class="todo-list">
-            </ul>
+		const todosHeader = this.appContainer.querySelector(".todo-main-header");
+		todosHeader.classList.remove("off");
+		todosHeader.innerHTML = `
+                <button id="add-new-todo"><span class="icon-[material-symbols--add]"></span><span class="button-desc">New todo</span></button>
+				<h3>📃Todos</h3>
 		`;
+		const emptyMsg = this.appContainer.querySelector(".empty-msg");
+		emptyMsg.textContent = "No todos found for this group. Add some todos and start getting things done.";
 	}
 
 	/**
@@ -71,10 +70,15 @@ class TodoUI {
 		const todoList = this.appContainer.querySelector(".todo-list");
 		// Start by clearing the todo list from previous groups to update it with the current one.
 		todoList.innerHTML = "";
+		const currentGroupName = this.appContainer.querySelector(".current-group-name");
 		if (todoGroup === null) {
+			currentGroupName.textContent = "None";
 			return;
 		}
+		currentGroupName.textContent = todoGroup.getGroupName();
 		const todos = todoGroup.todos;
+		const emptyMsg = this.appContainer.querySelector(".empty-msg");
+		todos.length === 0 ? emptyMsg.textContent = "No todos found for this group. Add some todos and start getting things done." : emptyMsg.textContent = "";
 		todos.forEach((todo, index) => {
 			const todoItem = document.createElement("li");
 			todoItem.setAttribute("data-index", index);
@@ -250,8 +254,13 @@ class TodoUI {
 	renderNoGroupsMessage() {
 		const todosDiv = this.appContainer.querySelector(".todo-main");
 		todosDiv.innerHTML = `
-            <p class="no-groups-msg">No todo groups found. Start by creating a new todo group to add todos.</p>
+            <p class="empty-msg">No todo groups found. Start by creating a new todo group to add todos.</p>
+			<ul class="todo-list"></ul>
 		`;
+		const todosHeader = this.appContainer.querySelector(".todo-main-header");
+		todosHeader.classList.add("off");
+		const currentGroupName = this.appContainer.querySelector(".current-group-name");
+		currentGroupName.textContent = "None";
 	}
 
 	renderAddTodoDialog(group) {

@@ -2,6 +2,25 @@ import TodoGroup from "./todoGroup";
 import TodoItem from "./todoItem";
 import TodoUI from "./todoUI";
 
+function handleOutsideClick(e) {
+	const todoGroupsList = document.querySelector(".todo-groups-list");
+	if (todoGroupsList.contains(e.target))
+	{
+		return;
+	}
+	closeMenu();
+}
+
+function closeMenu() {
+	const todoGroupsContainer = document.querySelector(".todo-groups");
+	const isOpen = todoGroupsContainer.classList.contains("group-open");
+	if (isOpen)
+	{
+		todoGroupsContainer.classList.remove("group-open");
+		document.removeEventListener("click", handleOutsideClick);
+	}
+}
+
 /**
  * Class for managing todo groups and todo lists within each group.
  * Includes methods for adding, editing, and
@@ -12,10 +31,8 @@ class TodoManager {
 		this.todoGroups = [];
 		this.currentGroup = null;
 		this.currentGroupEl = null;
-		this.#addNewGroupHandler();
+		this.initialize();
 	}
-
-    // TODO: add functionality for removing todos in a todo list
 
 	/**
 	 * Adds a handler for the button responsible for creating a new todo group
@@ -27,6 +44,39 @@ class TodoManager {
 			const addGroupForm = this.todoUI.renderAddGroupDialog();
 			this.#addNewGroupSubmitHandler(addGroupForm);
 		});
+	}
+
+	initialize() {
+		this.#addNewGroupHandler();
+		this.#addGroupExpandHandler();
+	}
+
+	#closeMenu() {
+		const todoGroupsContainer = document.querySelector(".todo-groups");
+		todoGroupsContainer.classList.remove("group-open");
+		document.removeEventListener("click", handleOutsideClick);
+	}
+
+	/** Adds a handler for expanding todo groups for smaller screens. */
+	#addGroupExpandHandler() {
+		const groupToggleBtn = document.getElementById("group-toggle-btn");
+		const todoGroupsContainer = document.querySelector(".todo-groups");
+
+		groupToggleBtn.addEventListener("click", (e) => {
+			e.stopPropagation();
+
+			const isOpen = todoGroupsContainer.classList.contains("group-open");
+
+			if (isOpen)
+			{
+				closeMenu();
+			}
+			else
+			{
+				todoGroupsContainer.classList.add("group-open");
+				document.addEventListener("click", handleOutsideClick);
+			}
+		})
 	}
 
 	/** Adds a handler for submitting the form for adding a new group. */
@@ -65,6 +115,8 @@ class TodoManager {
 						`li[data-index="${groupIndex}"]`
 					);
 				}
+				this.todoUI.renderTodos(this.currentGroup);
+				this.#addTodoButtonHandlers();
 			}
 		});
 	}
@@ -85,6 +137,7 @@ class TodoManager {
 					this.currentGroupEl = null;
 					this.todoUI.renderNoGroupsMessage();
 				}
+				closeMenu();
 			});
 		});
 	}
@@ -100,7 +153,10 @@ class TodoManager {
 				const groupToEdit = this.todoGroups[index];
 				const editGroupForm = this.todoUI.renderEditGroupDialog(groupToEdit);
 				this.#addEditGroupSubmitHandler(editGroupForm, index);
+				const todoGroupsContainer = document.querySelector(".todo-groups");
+				todoGroupsContainer.classList.remove("group-open");
 			});
+
 		});
 	}
 
@@ -145,6 +201,7 @@ class TodoManager {
 				const index = groupItem.getAttribute("data-index");
 				const groupToEdit = this.todoGroups[index];
 				this.todoUI.renderGroupInfo(groupToEdit);
+				closeMenu();
 			});
 		});
 	}
@@ -173,7 +230,8 @@ class TodoManager {
 				this.todoUI.renderTodoDiv();
 				this.#addNewTodoHandler();
 				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoButtonHandlers();				
+				this.#addTodoButtonHandlers();
+				closeMenu();
 			});
 		});
 	}
