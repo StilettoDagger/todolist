@@ -1,9 +1,10 @@
+import { fromJSON } from "postcss";
 import TodoItem from "./todoItem";
 
 class TodoGroup {
     #groupName;
     #groupDesc;
-    #isActive
+    #isActive;
 	constructor(groupName, groupDesc) {
 		this.#groupName = groupName;
 		this.#groupDesc = groupDesc;
@@ -50,12 +51,28 @@ class TodoGroup {
         return this.todos[index];
     }
 
+    toggleActive() {
+        this.#isActive = !this.#isActive;
+    }
+
     isActive() {
         return this.#isActive;
     }
 
-    toggleActive() {
-        this.#isActive = !this.#isActive;
+    toJSON() {
+        return {
+            groupName: this.#groupName,
+            groupDesc: this.#groupDesc,
+            isActive: this.#isActive,
+            todos: this.todos.map(todo => todo.toJSON())
+        };
+    }
+
+    static fromJSON(data) {
+        const group = new TodoGroup(data.groupName, data.groupDesc);
+        group.#isActive = data.isActive;
+        group.todos = data.todos.map(itemData => TodoItem.fromJSON(itemData));
+        return group;
     }
 }
 

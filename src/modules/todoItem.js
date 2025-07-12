@@ -1,14 +1,14 @@
 class TodoItem {
-    #title;
-    #description;
-    #dueDate;
-    #isDone
     /**
      * Constructor for creating a new todo item.
      * @param {string} title - The name of the new todo item.
      * @param {string} description - A brief description of the new todo item.
      * @param {Date} dueDate - A date object representing the date that the todo item is due.
      */
+    #title;
+    #description;
+    #dueDate;
+    #isDone;
     constructor(title, description, dueDate)
     {
         this.#title = title;
@@ -64,6 +64,21 @@ class TodoItem {
         {
             this.#dueDate = new Date(newDate);
         }
+    }
+
+    toJSON() {
+        return {
+            title: this.#title,
+            description: this.#description,
+            dueDate: this.#dueDate,
+            isDone: this.#isDone
+        };
+    }
+
+    static fromJSON(data) {
+        const item = new TodoItem(data.title, data.description, data.dueDate);
+        item.#isDone = data.isDone;
+        return item;
     }
 
 }

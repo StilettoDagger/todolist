@@ -26,12 +26,11 @@ function closeMenu() {
  * Includes methods for adding, editing, and
  */
 class TodoManager {
-	constructor(containerID) {
+	constructor(containerID, todoGroups = []) {
 		this.todoUI = new TodoUI(containerID);
-		this.todoGroups = [];
+		this.todoGroups = todoGroups;
 		this.currentGroup = null;
 		this.currentGroupEl = null;
-		this.initialize();
 	}
 
 	/**
@@ -49,12 +48,18 @@ class TodoManager {
 	initialize() {
 		this.#addNewGroupHandler();
 		this.#addGroupExpandHandler();
-	}
-
-	#closeMenu() {
-		const todoGroupsContainer = document.querySelector(".todo-groups");
-		todoGroupsContainer.classList.remove("group-open");
-		document.removeEventListener("click", handleOutsideClick);
+		this.renderAndAddHandlers();
+		for (const group of this.todoGroups) {
+			if (group.isActive)
+			{
+				this.currentGroup = group;
+				this.todoUI.renderTodoDiv();
+				this.#addNewTodoHandler();
+				this.todoUI.renderTodos(this.currentGroup);
+				this.#addTodoButtonHandlers();
+				break;
+			}
+		}
 	}
 
 	/** Adds a handler for expanding todo groups for smaller screens. */
@@ -103,7 +108,7 @@ class TodoManager {
 				}
 				this.todoGroups.push(todoGroup);
 				this.todoUI.removeOverlay();
-				this.#renderAndAddHandlers();
+				this.renderAndAddHandlers();
 				if (this.currentGroup === null && this.currentGroupEl === null) {
 					this.currentGroup = this.todoGroups.at(-1);
 					this.currentGroupEl = document.querySelector(
@@ -131,7 +136,7 @@ class TodoManager {
                 const groupItem = e.target.closest("li[data-index]");
 				const index = Number(groupItem.getAttribute("data-index"));
 				this.todoGroups.splice(index, 1);
-                this.#renderAndAddHandlers();
+                this.renderAndAddHandlers();
 				if (this.todoGroups.length === 0 || groupItem === this.currentGroupEl) {
 					this.currentGroup = null;
 					this.currentGroupEl = null;
@@ -183,7 +188,7 @@ class TodoManager {
 				groupToEdit.setGroupName(groupName);
 				groupToEdit.setGroupDesc(groupDesc);
 				this.todoUI.removeOverlay();
-                this.#renderAndAddHandlers();
+                this.renderAndAddHandlers();
                 this.currentGroupEl = document.querySelector(`li[data-index="${index}"]`);
 				this.currentGroupEl.classList.toggle("group-active");
 			}
@@ -225,7 +230,7 @@ class TodoManager {
 				}
 				this.currentGroup = this.todoGroups[groupIndex];
 				this.currentGroup.toggleActive();
-				this.#renderAndAddHandlers();
+				this.renderAndAddHandlers();
 				this.currentGroupEl = document.querySelector(".group-active");
 				this.todoUI.renderTodoDiv();
 				this.#addNewTodoHandler();
@@ -237,7 +242,7 @@ class TodoManager {
 	}
 
     /** Renders the groups and adds event handlers to each one */
-	#renderAndAddHandlers() {
+	renderAndAddHandlers() {
 		this.todoUI.renderGroups(this.todoGroups);
 		this.#addRemoveGroupHandlers();
 		this.#addEditGroupHandlers();
@@ -268,7 +273,6 @@ class TodoManager {
 
 				this.currentGroup.addTodo(todoName, todoDesc, todoDate);
 				this.todoUI.removeOverlay();
-				console.log(this.currentGroup.todos);
 				this.todoUI.renderTodos(this.currentGroup);
 				this.#addTodoButtonHandlers();
 			}

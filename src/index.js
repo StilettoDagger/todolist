@@ -1,6 +1,10 @@
 import './css/styles.css';
-import TodoManager from './modules/todoManager';
+import TodoApp from './modules/todoApp';
 
+const todoApp = new TodoApp("app");
 
-const todoApp = new TodoManager("app");
+todoApp.initialize();
 
+setInterval(() => {
+    todoApp.saveToStorage();
+}, 1000);
