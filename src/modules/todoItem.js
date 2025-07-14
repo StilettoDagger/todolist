@@ -9,12 +9,14 @@ class TodoItem {
     #description;
     #dueDate;
     #isDone;
-    constructor(title, description, dueDate)
+    #priority
+    constructor(title, description, dueDate, priority)
     {
         this.#title = title;
         this.#description = description;
         this.#dueDate = dueDate
         this.#isDone = false;
+        this.#priority = priority;
     }
 
     /**
@@ -35,6 +37,25 @@ class TodoItem {
     getDesc() {
         return this.#description;
     }
+
+    /**
+     * Gets the priority status of the todo item
+     * @returns The priority of the todo item as a string.
+    */
+    getPrio() {
+        switch(this.#priority)
+        {
+            case 0:
+                return "Low";
+            case 1:
+                return "Normal";
+            case 2:
+                return "High";
+            default:
+                return "Normal";
+        }
+    }
+
     /**
      * Gets the due date string of the todo item.
      * @returns The due date of the todo item as a string.
@@ -55,6 +76,10 @@ class TodoItem {
         this.#description = newDesc;
     }
 
+    setPrio(newPrio) {
+        this.#priority = newPrio;
+    }
+
     setDate(newDate) {
         if (newDate === "null")
         {
@@ -71,12 +96,13 @@ class TodoItem {
             title: this.#title,
             description: this.#description,
             dueDate: this.#dueDate,
-            isDone: this.#isDone
+            isDone: this.#isDone,
+            priority: this.#priority
         };
     }
 
     static fromJSON(data) {
-        const item = new TodoItem(data.title, data.description, data.dueDate);
+        const item = new TodoItem(data.title, data.description, data.dueDate, data.priority);
         item.#isDone = data.isDone;
         return item;
     }

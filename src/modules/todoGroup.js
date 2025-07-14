@@ -17,8 +17,9 @@ class TodoGroup {
      * @param {string} title - The name of the todo item.
      * @param {string} description - The description of the todo item.
      * @param {string} dueDate - The due date of the todo item.
+     * @param {Number} priority - The priority of the todo item.
      */
-	addTodo(title, description, dueDate) {
+	addTodo(title, description, dueDate, priority) {
         const todoItem = new TodoItem(title, description, dueDate);
         this.todos.push(todoItem);
     }

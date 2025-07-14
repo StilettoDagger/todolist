@@ -266,12 +266,14 @@ class TodoManager {
 			{
 				const todoNameInput = document.getElementById("todo-name");
 				const todoDescInput = document.getElementById("todo-desc");
+				const todoPrioInput = document.getElementById("todo-prio");
 				const todoDueDate = document.getElementById("todo-date");
 				const todoName = todoNameInput.value;
 				const todoDesc = todoDescInput.value;
 				const todoDate = todoDueDate.value ? new Date (todoDueDate.value) : null;
+				const todoPrio = Number(todoPrioInput.value); 
 
-				this.currentGroup.addTodo(todoName, todoDesc, todoDate);
+				this.currentGroup.addTodo(todoName, todoDesc, todoDate, todoPrio);
 				this.todoUI.removeOverlay();
 				this.todoUI.renderTodos(this.currentGroup);
 				this.#addTodoButtonHandlers();
@@ -287,23 +289,17 @@ class TodoManager {
 			const todoIndex = Number(todoItem.getAttribute("data-index"));
 			const todo = this.currentGroup.getTodo(todoIndex);
 			const editButtons = todoItem.querySelectorAll(".todo-edit");
+			const editTypeRegex = /todo-edit-(\w+)/;
 			editButtons.forEach((editButton) => {
+				const matchResult = editButton.className.match(editTypeRegex);
 				let fieldType = "";
-				if (editButton.classList.contains("todo-edit-title"))
+				if (matchResult)
 				{
-					fieldType = "title";
-				}
-				else if (editButton.classList.contains("todo-edit-desc"))
-				{
-					fieldType = "desc";
-				}
-				else if (editButton.classList.contains("todo-edit-date"))
-				{
-					fieldType = "date";
+					fieldType = matchResult[1];
 				}
 				editButton.addEventListener("click", (e) => {
 					e.stopPropagation();
-
+					console.log(fieldType);
 					const todoEditForm = this.todoUI.renderTodoEdit(todo, fieldType);
 					this.#addTodoEditSubmitHandler(todoEditForm, todo, fieldType);
 				})
@@ -327,6 +323,10 @@ class TodoManager {
 						break;
 					case "desc":
 						todo.setDesc(fieldValue);
+						break;
+					case "prio":
+						const prioValue = Number(fieldValue);
+						todo.setPrio(prioValue);
 						break;
 					case "date":
 						todo.setDate(fieldValue);

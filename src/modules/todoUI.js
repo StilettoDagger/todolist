@@ -80,9 +80,10 @@ class TodoUI {
 		const emptyMsg = this.appContainer.querySelector(".empty-msg");
 		todos.length === 0 ? emptyMsg.textContent = "No todos found for this group. Add some todos and start getting things done." : emptyMsg.textContent = "";
 		todos.forEach((todo, index) => {
+			const prioStatus = todo.getPrio();
 			const todoItem = document.createElement("li");
 			todoItem.setAttribute("data-index", index);
-			todoItem.classList.add("todo-item", "group/item");
+			todoItem.classList.add("todo-item", `todo-${prioStatus.toLowerCase()}`, "group/item");
 			if (todo.isChecked())
 			{
 				todoItem.classList.add("checked");
@@ -103,6 +104,11 @@ class TodoUI {
 			}`;
 			todoDesc.classList.add("todo-desc", "group/edit");
 			todoInfo.appendChild(todoDesc);
+			const todoPrio = document.createElement("p");
+			todoPrio.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-prio"><span class="icon-[material-symbols--edit-square-outline]"></span></button>Priority: <span class="todo-prio-status">${
+				prioStatus}</span>`;
+			todoPrio.classList.add("todo-prio", "group/edit");
+			todoInfo.appendChild(todoPrio);
 			const todoDueDate = document.createElement("p");
 			todoDueDate.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-date"><span class="icon-[material-symbols--edit-square-outline]"></span></button>Due Date: ${
 				todo.getDueDate() ? todo.getDueDate() : "No due date"
@@ -279,6 +285,14 @@ class TodoUI {
 				<textarea class="resize-none" id="todo-desc"></textarea>
 			</div>
 			<div>
+				<label for="todo-prio">Priority</label>
+				<select name="todo-prio" id="todo-prio">
+					<option value="0">Low</option>
+					<option selected value="1">Normal</option>
+					<option value="2">High</option>
+				</select>
+			</div>
+			<div>
 				<label for="todo-date">Due date (optional)</label>
 				<input type="date" name="todo-date" id="todo-date"/>
 			<button type="submit">Add todo</button>
@@ -307,10 +321,21 @@ class TodoUI {
 				fieldValue = todo.getDesc();
 				inputEl = `<textarea class="resize-none" placeholder="${fieldValue}" name="todo-${fieldType}-input" id="todo-${fieldType}-input"></textarea>`;
 				break;
+			case "prio":
+				fieldValue = todo.getPrio();
+				inputEl = `
+				<select name="todo-${fieldType}-input" id="todo-${fieldType}-input">
+					<option ${fieldValue === "Low" ? "selected" : ""} value="0">Low</option>
+					<option ${fieldValue === "Normal" ? "selected" : ""} value="1">Normal</option>
+					<option ${fieldValue === "High" ? "selected" : ""} value="2">High</option>
+				</select>
+				`;
+				break;
 			case "date":
 				fieldValue = todo.getDueDate();
 				const today = new Date().toISOString().substring(0, 10);
 				inputEl = `<input min="${today}" placeholder="${fieldValue}" type="date" name="todo-${fieldType}-input" id="todo-${fieldType}-input"/>`;
+				break;
 			default:
 				break;
 		}
