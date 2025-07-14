@@ -8,6 +8,7 @@
     "start": "webpack serve --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "build:dev": "webpack --config webpack.dev.js",
+    "predeploy": "npm run build",
     "deploy": "git add -f dist && git commit -m 'Deployment commit' && git subtree push --prefix dist origin gh-pages"
   },
   "repository": {
