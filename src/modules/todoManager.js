@@ -188,9 +188,9 @@ class TodoManager {
 				groupToEdit.setGroupName(groupName);
 				groupToEdit.setGroupDesc(groupDesc);
 				this.todoUI.removeOverlay();
+				const currentIndex = Number(this.currentGroupEl.getAttribute("data-index"));
                 this.renderAndAddHandlers();
-                this.currentGroupEl = document.querySelector(`li[data-index="${index}"]`);
-				this.currentGroupEl.classList.toggle("group-active");
+                this.currentGroupEl = document.querySelector(`li[data-index="${currentIndex}"]`);
 			}
 		});
 	}
