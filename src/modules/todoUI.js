@@ -345,7 +345,7 @@ class TodoUI {
 			<div>
 				${inputEl}
 			</div>
-			<button type="submit">Edit ${fieldType === "desc" ? "description" : fieldType}</button>
+			<button type="submit">Edit ${fieldType === "desc" ? "description" : fieldType === "prio" ? "priority" : fieldType}</button>
 		</form>
 		`;
 		return document.getElementById("todo-edit-form");

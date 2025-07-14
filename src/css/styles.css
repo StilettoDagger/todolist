@@ -43,7 +43,7 @@ body {
 }
 
 .todo-groups {
-    @apply items-center row-span-1 lg:row-span-3 self-stretch flex flex-row border-b-2 lg:flex-col lg:border-r-2 lg:border-b-0 border-gray-400;
+    @apply relative items-center row-span-1 lg:row-span-3 self-stretch flex flex-row border-b-2 lg:flex-col lg:border-r-2 lg:border-b-0 border-gray-400;
 }
 
 .group-open .todo-groups-list {
@@ -51,7 +51,11 @@ body {
 }
 
 .todo-groups-header {
-    @apply lg:w-full text-center flex gap-4 lg:block items-center font-bold p-5 text-xl lg:text-3xl lg:border-b-2 border-gray-400;
+    @apply lg:min-h-20 lg:w-full text-center flex gap-4 lg:block items-center font-bold p-4 text-lg lg:text-2xl lg:border-b-2 border-gray-400;
+}
+
+.todo-groups-header > h2 {
+    @apply h-full flex flex-col items-center justify-center;
 }
 
 .todo-main {
@@ -59,11 +63,11 @@ body {
 }
 
 .empty-msg {
-    @apply empty:hidden my-auto mx-4 text-xl lg:p-0 lg:text-3xl text-black/50 italic text-center;
+    @apply text-shadow-sm empty:hidden my-auto mx-4 text-xl lg:p-0 lg:text-3xl text-black/50 italic text-center;
 }
 
 .todo-main-header {
-    @apply lg:col-start-2 lg:col-end-3 row-start-2 row-end-3 lg:row-start-1 lg:row-end-2 grid grid-cols-3 place-items-center justify-center text-xl lg:text-3xl text-center border-b-2 border-gray-400 p-4 font-bold;
+    @apply lg:min-h-20 lg:col-start-2 lg:col-end-3 row-start-2 row-end-3 lg:row-start-1 lg:row-end-2 grid grid-cols-3 place-items-center justify-center text-lg lg:text-2xl text-center border-b-2 border-gray-400 p-4 font-bold;
 }
 
 .todo-main-header.off
@@ -72,7 +76,7 @@ body {
 }
 
 #add-new-todo {
-    @apply border-2 border-green-700 flex flex-row items-center text-xl bg-green-600 rounded-full text-gray-100 cursor-pointer p-2 hover:bg-green-700;
+    @apply flex flex-row items-center text-lg bg-green-700 rounded-full text-gray-100 cursor-pointer p-1 lg:p-2 hover:bg-green-800;
 }
 
 .todo-list {
@@ -88,7 +92,7 @@ body {
 }
 
 .todo-info {
-    @apply p-1 min-w-0 flex flex-col self-center gap-1 row-span-3 col-start-2 col-end-3;
+    @apply text-sm lg:text-base p-1 min-w-0 flex flex-col self-center gap-1 row-span-3 col-start-2 col-end-3;
 }
 
 .todo-edit {
@@ -137,7 +141,7 @@ body {
 }
 
 .todo-title {
-    @apply text-black text-xl;
+    @apply text-black text-lg lg:text-xl;
 }
 
 .todo-desc {
@@ -153,7 +157,7 @@ body {
 }
 
 .dialog {
-    @apply min-w-1/6 rounded-2xl shadow-2xl flex flex-col text-gray-200 m-auto z-500 bg-blue-900;
+    @apply min-w-72 rounded-2xl shadow-2xl flex flex-col text-gray-200 m-auto z-500 bg-blue-900;
 }
 
 .dialog-header {
@@ -195,15 +199,15 @@ form>div {
 }
 
 #add-new-group {
-    @apply border-2 border-blue-700 self-center mx-4 lg:mx-auto my-4 font-bold row-start-3 row-end-4 col-start-1 col-end-2 flex flex-row items-center text-gray-100 bg-blue-600 p-2 rounded-full cursor-pointer hover:bg-blue-700;
+    @apply text-lg self-center mx-4 lg:mx-auto my-4 font-bold row-start-3 row-end-4 col-start-1 col-end-2 flex flex-row items-center text-gray-100 bg-blue-700 p-1 lg:p-2 rounded-full cursor-pointer hover:bg-blue-800;
 }
 
 button .button-desc {
-    @apply text-xl hidden lg:block;
+    @apply text-lg hidden lg:block;
 }
 
 button span {
-    @apply text-2xl
+    @apply text-2xl;
 }
 
 .todo-groups:has(.todo-groups-list:empty) #group-toggle-btn {
@@ -230,7 +234,7 @@ button span {
 }
 
 .current-group {
-    @apply grow font-bold lg:hidden;
+    @apply text-center grow font-bold lg:hidden;
 }
 
 .todo-groups-list {
@@ -238,7 +242,7 @@ button span {
 }
 
 .todo-group-item {
-    @apply cursor-pointer items-center w-full text-gray-700 bg-gray-100 hover:bg-sky-200 border-gray-500 border rounded-xl p-2 font-normal grid grid-cols-2 break-words;
+    @apply shadow-xl cursor-pointer items-center w-full text-gray-700 bg-gray-100 hover:bg-sky-200 border-gray-500 border rounded-xl p-2 font-normal grid grid-cols-2 break-words;
 }
 
 .todo-group-buttons {
