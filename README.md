@@ -11,6 +11,7 @@ The todo-list app supports the following features:
 + Set a due date for todos.
 + Set priority for todos.
 + Add, remove, and edit todos and todo groups.
++ Automatically save todos and todo groups on exiting the application.
 
 ## Building the project
 
