@@ -104,6 +104,7 @@ class TodoItem {
     static fromJSON(data) {
         const item = new TodoItem(data.title, data.description, data.dueDate, data.priority);
         item.#isDone = data.isDone;
+        item.#dueDate = new Date(data.dueDate);
         return item;
     }
 
