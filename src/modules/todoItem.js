@@ -1,3 +1,5 @@
+import {differenceInCalendarDays, format} from 'date-fns';
+
 class TodoItem {
     /**
      * Constructor for creating a new todo item.
@@ -10,6 +12,7 @@ class TodoItem {
     #dueDate;
     #isDone;
     #priority
+    #isOverdue
     constructor(title, description, dueDate, priority)
     {
         this.#title = title;
@@ -17,6 +20,7 @@ class TodoItem {
         this.#dueDate = dueDate
         this.#isDone = false;
         this.#priority = priority;
+        this.#isOverdue = false;
     }
 
     /**
@@ -61,7 +65,36 @@ class TodoItem {
      * @returns The due date of the todo item as a string.
     */
     getDueDate() {
-        return this.#dueDate ? this.#dueDate.toDateString() : null;
+        return this.#dueDate ? format(this.#dueDate, "PPP") : null;
+    }
+
+    /**
+     * Checks the overdue status of a todo item.
+     * @returns true if the todo task is overdue and false if it is not 
+     */
+    getOverdueStatus() {
+        const today = new Date();
+        this.#isOverdue = today > this.#dueDate;
+        return this.#isOverdue;
+    }
+
+    /**
+     * Gets the remaining time for the todo item before it is overdue.
+     * @returns a string of the remaining time between now and the date the todo item is due.
+     * and returns the string "Overdue!" if it is overdue
+     */
+    getRemainingTime() {
+        if (this.#dueDate)
+        {
+            if (!this.getOverdueStatus())
+            {
+                return `${differenceInCalendarDays(this.#dueDate, new Date())} days left`;
+            }
+            else
+            {
+                return "Overdue!"
+            }
+        }
     }
 
     isChecked() {
@@ -81,7 +114,7 @@ class TodoItem {
     }
 
     setDate(newDate) {
-        if (newDate === "null")
+        if (!newDate || newDate === "null")
         {
             this.#dueDate = null;
         }
@@ -104,7 +137,7 @@ class TodoItem {
     static fromJSON(data) {
         const item = new TodoItem(data.title, data.description, data.dueDate, data.priority);
         item.#isDone = data.isDone;
-        item.#dueDate = new Date(data.dueDate);
+        item.#dueDate = data.dueDate ? new Date(data.dueDate) : null;
         return item;
     }
 

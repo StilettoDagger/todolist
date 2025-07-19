@@ -35,6 +35,6 @@ npm run build
 
 ## TODOS
 
-+ [ ] Add notification for overdue todos.
++ [x] Add notification for overdue todos.
 + [ ] Update UI and app layout.
 + [ ] Add summary overview for todos and todo groups.

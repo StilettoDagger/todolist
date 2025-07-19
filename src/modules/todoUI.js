@@ -1,4 +1,5 @@
 import TodoGroup from "./todoGroup";
+import { formatISO } from "date-fns";
 
 /**
  * Class responsible for rendering and updating the application UI elements on the DOM.
@@ -110,10 +111,18 @@ class TodoUI {
 			todoPrio.classList.add("todo-prio", "group/edit");
 			todoInfo.appendChild(todoPrio);
 			const todoDueDate = document.createElement("p");
-			todoDueDate.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-date"><span class="icon-[material-symbols--edit-square-outline]"></span></button>Due Date: ${
-				todo.getDueDate() ? todo.getDueDate() : "No due date"
+			todoDueDate.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-date"><span class="icon-[material-symbols--edit-square-outline]"></span></button><p class="todo-date-info">${
+				todo.getDueDate() ?"Due Date: " + todo.getDueDate() + "</p> <span class='todo-remaining-time'> " + todo.getRemainingTime() + "</span>" : "No due date"
 			}`;
 			todoDueDate.classList.add("todo-date", "group/edit");
+			if (todo.getOverdueStatus())
+			{
+				todoDueDate.classList.add("overdue");
+			}
+			else
+			{
+				todoDueDate.classList.remove("overdue");
+			}
 			const todoCheck = document.createElement("button");
 			todoCheck.classList.add("todo-check");
 			if (todo.isChecked())
@@ -300,8 +309,8 @@ class TodoUI {
 		`;
 
 		const dueDateInput = document.getElementById("todo-date");
-		const today = new Date();
-		dueDateInput.min = today.toISOString().substring(0, 10);
+		const today = formatISO(new Date(), {representation: 'date'});
+		dueDateInput.min = today;
 		return document.getElementById("add-todo-form");
 	}
 
@@ -333,8 +342,8 @@ class TodoUI {
 				break;
 			case "date":
 				fieldValue = todo.getDueDate();
-				const today = new Date().toISOString().substring(0, 10);
-				inputEl = `<input min="${today}" placeholder="${fieldValue}" type="date" name="todo-${fieldType}-input" id="todo-${fieldType}-input"/>`;
+				const today = formatISO(new Date(), {representation: 'date'});
+				inputEl = `<input min="${today}" type="date" name="todo-${fieldType}-input" id="todo-${fieldType}-input"/>`;
 				break;
 			default:
 				break;

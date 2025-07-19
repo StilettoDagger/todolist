@@ -39,7 +39,7 @@ body {
 }
 
 #app {
-    @apply overflow-y-auto bg-gray-200 grid grid-cols-1 lg:grid-cols-[minmax(250px,1fr)_4fr] grid-rows-[auto_auto_1fr] lg:grid-rows-[auto_1fr_auto] items-center font-inter w-[90%] xl:w-2/3 rounded-2xl border-3 border-dashed shadow-2xl grow;
+    @apply overflow-y-auto bg-gray-200 grid grid-cols-1 lg:grid-cols-[minmax(250px,1fr)_4fr] grid-rows-[auto_auto_1fr] lg:grid-rows-[auto_1fr_auto] items-center font-inter w-[95%] xl:w-2/3 rounded-2xl border-3 border-dashed shadow-2xl grow;
 }
 
 .todo-groups {
@@ -84,7 +84,7 @@ body {
 }
 
 .todo-item {
-    @apply shadow-xl grid grid-cols-[auto_1fr_auto] auto-rows-auto items-center gap-4 text-neutral-700 bg-gray-200 m-4 pr-3 rounded-2xl;
+    @apply shadow-xl grid grid-cols-[auto_1fr_auto] auto-rows-auto items-center gap-4 text-neutral-700 bg-gray-200 m-2 lg:m-4 pr-3 rounded-2xl;
 }
 
 .todo-item.checked, .todo-item.checked .todo-title {
@@ -95,8 +95,29 @@ body {
     @apply text-sm lg:text-base p-1 min-w-0 flex flex-col self-center gap-1 row-span-3 col-start-2 col-end-3;
 }
 
+p.todo-date {
+    @apply grid grid-cols-[auto_auto] justify-start sm:flex;
+}
+
+.todo-remaining-time {
+    @apply col-start-2 sm:before:content-['-'] italic;
+}
+
+.todo-date.overdue .todo-remaining-time {
+    @apply text-red-700 font-bold;
+}
+
+.todo-item.checked .todo-remaining-time {
+    @apply hidden;
+}
+
 .todo-edit {
     @apply lg:invisible cursor-pointer text-green-700 hover:text-green-800 lg:group-hover/edit:visible;
+}
+
+.todo-edit span, .todo-check span
+{
+    @apply text-xl lg:text-2xl;
 }
 
 .todo-info > * {
