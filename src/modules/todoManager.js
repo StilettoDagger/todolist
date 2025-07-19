@@ -50,7 +50,7 @@ class TodoManager {
 		this.#addGroupExpandHandler();
 		this.renderAndAddHandlers();
 		for (const group of this.todoGroups) {
-			if (group.isActive)
+			if (group.isActive())
 			{
 				this.currentGroup = group;
 				this.todoUI.renderTodoDiv();
