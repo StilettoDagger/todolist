@@ -125,7 +125,6 @@ class TodoManager {
 				}
 				this.todoUI.renderTodos(this.currentGroup);
 				this.#addTodoButtonHandlers();
-				this.#addClearTodosHandler();
 			}
 		});
 	}
