@@ -4,7 +4,8 @@
 	"description": "A Webpack project with Tailwind CSS and PostCSS",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "npx eslint src/",
+		"prettify": "npx prettier . --write",
 		"start": "webpack serve --open --config webpack.dev.js",
 		"build": "webpack --config webpack.prod.js",
 		"build:dev": "webpack --config webpack.dev.js",
@@ -40,6 +41,7 @@
 		"postcss-loader": "^8.1.1",
 		"postcss-nested": "^7.0.2",
 		"prettier": "3.6.2",
+		"prettier-plugin-tailwindcss": "^0.6.14",
 		"style-loader": "^4.0.0",
 		"tailwind": "^4.0.0",
 		"tailwindcss": "^4.1.10",
