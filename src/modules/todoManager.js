@@ -47,6 +47,7 @@ class TodoManager {
 
 	initialize() {
 		this.#addNewGroupHandler();
+		this.#addClearGroupsHandler();
 		this.#addGroupExpandHandler();
 		this.renderAndAddHandlers();
 		for (const group of this.todoGroups) {
@@ -57,6 +58,7 @@ class TodoManager {
 				this.#addNewTodoHandler();
 				this.todoUI.renderTodos(this.currentGroup);
 				this.#addTodoButtonHandlers();
+				this.#addClearTodosHandler();
 				break;
 			}
 		}
@@ -99,6 +101,7 @@ class TodoManager {
 				{
 					this.todoUI.renderTodoDiv();
 					this.#addNewTodoHandler();
+					this.#addClearTodosHandler();
 				}
 
 				const todoGroup = new TodoGroup(groupName, groupDesc);
@@ -122,8 +125,58 @@ class TodoManager {
 				}
 				this.todoUI.renderTodos(this.currentGroup);
 				this.#addTodoButtonHandlers();
+				this.#addClearTodosHandler();
 			}
 		});
+	}
+
+	#addClearGroupsHandler() {
+		const clearGroupsBtn = document.getElementById("clear-groups");
+		clearGroupsBtn.addEventListener("click", (e) => {
+			if (this.todoGroups.length == 0)
+			{
+				return;
+			}
+			const groupsClearForm = this.todoUI.renderClearConfirmation("projects");
+			const inputButtons = groupsClearForm.querySelectorAll("input[type='button']");
+			inputButtons.forEach((inputButton) => {
+				inputButton.addEventListener("click", (e) => {
+					if (inputButton.value === "Yes")
+					{
+						this.todoGroups = [];
+						this.currentGroup = null;
+						this.currentGroupEl = null;
+						this.renderAndAddHandlers();
+						this.todoUI.renderTodos(this.currentGroup);
+						this.todoUI.renderNoGroupsMessage();
+					}
+					this.todoUI.removeOverlay();
+				})
+			})
+		})
+	}
+
+	#addClearTodosHandler()
+	{
+		const clearTodosBtn = document.getElementById("clear-todos");
+		clearTodosBtn.addEventListener("click", (e) => {
+			if (this.currentGroup.todos.length == 0)
+			{
+				return;
+			}
+			const todosClearForm = this.todoUI.renderClearConfirmation("todos");
+			const inputButtons = todosClearForm.querySelectorAll("input[type='button']");
+			inputButtons.forEach((inputButton) => {
+				inputButton.addEventListener("click", (e) => {
+					if (inputButton.value === "Yes")
+					{
+						this.currentGroup.todos = [];
+						this.todoUI.renderTodos(this.currentGroup);
+					}
+					this.todoUI.removeOverlay();
+				})
+			})
+		})
 	}
 
 	/** Adds event handlers to remove buttons for removing todo groups. */
@@ -234,6 +287,7 @@ class TodoManager {
 				this.currentGroupEl = document.querySelector(".group-active");
 				this.todoUI.renderTodoDiv();
 				this.#addNewTodoHandler();
+				this.#addClearTodosHandler();
 				this.todoUI.renderTodos(this.currentGroup);
 				this.#addTodoButtonHandlers();
 				closeMenu();

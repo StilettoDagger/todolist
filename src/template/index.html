@@ -12,22 +12,30 @@
             <div class="todo-groups">
                 <div class="todo-groups-header">
                     <h2>
-                        Todo Groups
+                        Projects
                     </h2>
                     <button id="group-toggle-btn">
                         <span class="icon-[mdi--expand-more]"></span>
                     </button>
                 </div>
-                <h3 class="current-group">Current Group: <span class="current-group-name">None</span></h3>
+                <h3 class="current-group">Current Project: <span class="current-group-name">None</span></h3>
                 <ul class="todo-groups-list"></ul>
-                <button id="add-new-group">
-                    <span class="icon-[material-symbols--add]"></span>
-                    <span class="button-desc">New Group</span>
+                <div class="group-control-buttons">
+                    <button id="add-new-group">
+                        <span class="icon-[material-symbols--add]"></span>
+                        <span class="button-desc">New Project</span>
+                    </button>
+                    <button id="clear-groups">
+                        <span class="icon-[mdi--erase-outline]"></span>
+                        <span class="button-desc">Clear Projects</span>
+                    </button>
+                </div>
+
                 </button>
             </div>
             <div class="todo-main-header off"></div>
             <div class="todo-main">
-                <p class="empty-msg">No todo groups found. Start by creating a new todo group to add todos.</p>
+                <p class="empty-msg">No projects found. Start by creating a new todo project to add a todo list.</p>
                 <ul class="todo-list">
                 </ul>
             </div>

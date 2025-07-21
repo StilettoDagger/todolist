@@ -56,11 +56,12 @@ class TodoUI {
 		const todosHeader = this.appContainer.querySelector(".todo-main-header");
 		todosHeader.classList.remove("off");
 		todosHeader.innerHTML = `
-                <button id="add-new-todo"><span class="icon-[material-symbols--add]"></span><span class="button-desc">New todo</span></button>
-				<h3>📃Todos</h3>
+                <button id="add-new-todo"><span class="icon-[material-symbols--add]"></span><span class="button-desc">New Todo</span></button>
+				<h3>Todos</h3>
+				<button id="clear-todos"><span class="icon-[mdi--erase-outline]"></span><span class="button-desc">Clear Todos</span></button>
 		`;
 		const emptyMsg = this.appContainer.querySelector(".empty-msg");
-		emptyMsg.textContent = "No todos found for this group. Add some todos and start getting things done.";
+		emptyMsg.textContent = "No todos found for this project. Add some todos and start getting things done.";
 	}
 
 	/**
@@ -209,15 +210,15 @@ class TodoUI {
 		this.#toggleOverlay();
 		const dialogBody = document.querySelector(".dialog-body");
 		const dialogTitle = document.querySelector(".dialog-title");
-		dialogTitle.textContent = "Add a new group";
+		dialogTitle.textContent = "Add a new project";
 		dialogBody.innerHTML = `
 		<form id="add-group-form">
 			<div>
-				<label for="group-name">Group name:</label>
+				<label for="group-name">Project name:</label>
 				<input type="text" name="group-name" id="group-name" required/>
 			</div>
 			<div>
-				<label for="group-desc">Briefly describe the group (optional):</label>
+				<label for="group-desc">Briefly describe the project (optional):</label>
 				<textarea class="resize-none" id="group-desc"></textarea>
 			</div>
 			<button type="submit">Add group</button>
@@ -230,18 +231,18 @@ class TodoUI {
 		this.#toggleOverlay();
 		const dialogBody = document.querySelector(".dialog-body");
 		const dialogTitle = document.querySelector(".dialog-title");
-		dialogTitle.textContent = "Edit group";
+		dialogTitle.textContent = "Edit project";
 		dialogBody.innerHTML = `
 		<form id="edit-group-form">
 			<div>
-				<label for="group-name">Group name:</label>
+				<label for="group-name">Project name:</label>
 				<input placeholder="${groupToEdit.getGroupName()}" type="text" name="group-name" id="group-name"/>
 			</div>
 			<div>
-				<label for="group-desc">Briefly describe the group (optional):</label>
+				<label for="group-desc">Briefly describe the project (optional):</label>
 				<textarea placeholder="${groupToEdit.getGroupDesc()}" class="resize-none" id="group-desc"></textarea>
 			</div>
-			<button type="submit">Edit group</button>
+			<button type="submit">Edit project</button>
 		</form>
 		`;
 		return document.getElementById("edit-group-form");
@@ -251,15 +252,15 @@ class TodoUI {
 		this.#toggleOverlay();
 		const dialogBody = document.querySelector(".dialog-body");
 		const dialogTitle = document.querySelector(".dialog-title");
-		dialogTitle.textContent = "Group Information";
+		dialogTitle.textContent = "Project information";
 		dialogBody.innerHTML = `
 		<div class="group-info">
 			<div>
-				<h3>Group Name:</h3>
+				<h3>Project name:</h3>
 				<p>${group.getGroupName()}</p>
 			</div>
 			<div>
-				<h3>Group Description:</h3>
+				<h3>Project description:</h3>
 				<p>${group.getGroupDesc() ? group.getGroupDesc() : "No description."}</p>
 			</div>
 		</div>
@@ -269,7 +270,7 @@ class TodoUI {
 	renderNoGroupsMessage() {
 		const todosDiv = this.appContainer.querySelector(".todo-main");
 		todosDiv.innerHTML = `
-            <p class="empty-msg">No todo groups found. Start by creating a new todo group to add todos.</p>
+            <p class="empty-msg">No projects found. Start by creating a new todo project to add a todo list.</p>
 			<ul class="todo-list"></ul>
 		`;
 		const todosHeader = this.appContainer.querySelector(".todo-main-header");
@@ -358,6 +359,22 @@ class TodoUI {
 		</form>
 		`;
 		return document.getElementById("todo-edit-form");
+	}
+
+	renderClearConfirmation(type)
+	{
+		this.#toggleOverlay();
+		const dialogTitle = document.querySelector(".dialog-title");
+		const dialogBody = document.querySelector(".dialog-body");
+		dialogTitle.textContent = `Are you sure you want to clear all ${type}?`;
+		dialogBody.innerHTML = `
+		<form id="clear-confirm">
+			<input type="button" value="Yes" />
+			<input type="button" value="No" />
+		</form>
+		`
+		const clearForm = document.getElementById("clear-confirm");
+		return clearForm;
 	}
 }
 
