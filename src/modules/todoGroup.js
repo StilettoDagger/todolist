@@ -20,7 +20,7 @@ class TodoGroup {
      * @param {Number} priority - The priority of the todo item.
      */
 	addTodo(title, description, dueDate, priority) {
-        const todoItem = new TodoItem(title, description, dueDate);
+        const todoItem = new TodoItem(title, description, dueDate, priority);
         this.todos.push(todoItem);
     }
 
