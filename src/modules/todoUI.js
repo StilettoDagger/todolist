@@ -1,4 +1,3 @@
-import TodoGroup from "./todoGroup";
 import { formatISO } from "date-fns";
 
 /**
@@ -39,12 +38,9 @@ class TodoUI {
 			groupButtons.appendChild(groupDelButton);
 			groupItem.appendChild(groupButtons);
 			groupItem.className = "todo-group-item";
-			if (group.isActive())
-			{
+			if (group.isActive()) {
 				groupItem.classList.add("group-active");
-			}
-			else
-			{
+			} else {
 				groupItem.classList.remove("group-active");
 			}
 			groupItem.setAttribute("data-index", index);
@@ -61,7 +57,8 @@ class TodoUI {
 				<button id="clear-todos"><span class="icon-[mdi--erase-outline]"></span><span class="button-desc">Clear Todos</span></button>
 		`;
 		const emptyMsg = this.appContainer.querySelector(".empty-msg");
-		emptyMsg.textContent = "No todos found for this project. Add some todos and start getting things done.";
+		emptyMsg.textContent =
+			"No todos found for this project. Add some todos and start getting things done.";
 	}
 
 	/**
@@ -72,7 +69,9 @@ class TodoUI {
 		const todoList = this.appContainer.querySelector(".todo-list");
 		// Start by clearing the todo list from previous groups to update it with the current one.
 		todoList.innerHTML = "";
-		const currentGroupName = this.appContainer.querySelector(".current-group-name");
+		const currentGroupName = this.appContainer.querySelector(
+			".current-group-name"
+		);
 		if (todoGroup === null) {
 			currentGroupName.textContent = "None";
 			return;
@@ -80,18 +79,22 @@ class TodoUI {
 		currentGroupName.textContent = todoGroup.getGroupName();
 		const todos = todoGroup.todos;
 		const emptyMsg = this.appContainer.querySelector(".empty-msg");
-		todos.length === 0 ? emptyMsg.textContent = "No todos found for this group. Add some todos and start getting things done." : emptyMsg.textContent = "";
+		todos.length === 0
+			? (emptyMsg.textContent =
+					"No todos found for this group. Add some todos and start getting things done.")
+			: (emptyMsg.textContent = "");
 		todos.forEach((todo, index) => {
 			const prioStatus = todo.getPrio();
 			const todoItem = document.createElement("li");
 			todoItem.setAttribute("data-index", index);
-			todoItem.classList.add("todo-item", `todo-${prioStatus.toLowerCase()}`, "group/item");
-			if (todo.isChecked())
-			{
+			todoItem.classList.add(
+				"todo-item",
+				`todo-${prioStatus.toLowerCase()}`,
+				"group/item"
+			);
+			if (todo.isChecked()) {
 				todoItem.classList.add("checked");
-			}
-			else
-			{
+			} else {
 				todoItem.classList.remove("checked");
 			}
 			const todoInfo = document.createElement("div");
@@ -108,33 +111,34 @@ class TodoUI {
 			todoInfo.appendChild(todoDesc);
 			const todoPrio = document.createElement("p");
 			todoPrio.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-prio"><span class="icon-[material-symbols--edit-square-outline]"></span></button>Priority: <span class="todo-prio-status">${
-				prioStatus}</span>`;
+				prioStatus
+			}</span>`;
 			todoPrio.classList.add("todo-prio", "group/edit");
 			todoInfo.appendChild(todoPrio);
 			const todoDueDate = document.createElement("p");
 			todoDueDate.innerHTML = `<button ${todo.isChecked() ? "disabled" : ""} class="todo-edit todo-edit-date"><span class="icon-[material-symbols--edit-square-outline]"></span></button><p class="todo-date-info">${
-				todo.getDueDate() ?"Due Date: " + todo.getDueDate() + "</p> <span class='todo-remaining-time'> " + todo.getRemainingTime() + "</span>" : "No due date"
+				todo.getDueDate()
+					? "Due Date: " +
+						todo.getDueDate() +
+						"</p> <span class='todo-remaining-time'> " +
+						todo.getRemainingTime() +
+						"</span>"
+					: "No due date"
 			}`;
 			todoDueDate.classList.add("todo-date", "group/edit");
-			if (todo.getOverdueStatus())
-			{
+			if (todo.getOverdueStatus()) {
 				todoDueDate.classList.add("overdue");
-			}
-			else
-			{
+			} else {
 				todoDueDate.classList.remove("overdue");
 			}
 			const todoCheck = document.createElement("button");
 			todoCheck.classList.add("todo-check");
-			if (todo.isChecked())
-			{
+			if (todo.isChecked()) {
 				todoCheck.classList.add("checked");
-			}
-			else
-			{
+			} else {
 				todoCheck.classList.remove("checked");
 			}
-			todoCheck.innerHTML = `${!todo.isChecked() ? '<span class="icon-[mdi--checkbox-blank-outline]"></span>': '<span class="icon-[mdi--checkbox-outline]"></span>'}`;
+			todoCheck.innerHTML = `${!todo.isChecked() ? '<span class="icon-[mdi--checkbox-blank-outline]"></span>' : '<span class="icon-[mdi--checkbox-outline]"></span>'}`;
 			const todoDel = document.createElement("button");
 			todoDel.className = "todo-del";
 			todoDel.innerHTML = `<span class="icon-[mdi--remove]"></span>`;
@@ -171,7 +175,7 @@ class TodoUI {
 			}
 		});
 		const closeOverlayButton = document.querySelector(".close-dialog");
-		closeOverlayButton.addEventListener("click", (e) => {
+		closeOverlayButton.addEventListener("click", () => {
 			this.removeOverlay();
 		});
 	}
@@ -195,7 +199,7 @@ class TodoUI {
 		</div>
 		`;
 		const closeOverlayButton = document.querySelector(".close-dialog");
-		closeOverlayButton.addEventListener("click", (e) => {
+		closeOverlayButton.addEventListener("click", () => {
 			this.removeOverlay();
 		});
 	}
@@ -275,7 +279,9 @@ class TodoUI {
 		`;
 		const todosHeader = this.appContainer.querySelector(".todo-main-header");
 		todosHeader.classList.add("off");
-		const currentGroupName = this.appContainer.querySelector(".current-group-name");
+		const currentGroupName = this.appContainer.querySelector(
+			".current-group-name"
+		);
 		currentGroupName.textContent = "None";
 	}
 
@@ -310,13 +316,12 @@ class TodoUI {
 		`;
 
 		const dueDateInput = document.getElementById("todo-date");
-		const today = formatISO(new Date(), {representation: 'date'});
+		const today = formatISO(new Date(), { representation: "date" });
 		dueDateInput.min = today;
 		return document.getElementById("add-todo-form");
 	}
 
-	renderTodoEdit(todo, fieldType)
-	{
+	renderTodoEdit(todo, fieldType) {
 		this.#toggleOverlay();
 		const dialogBody = document.querySelector(".dialog-body");
 		const dialogTitle = document.querySelector(".dialog-title");
@@ -341,11 +346,12 @@ class TodoUI {
 				</select>
 				`;
 				break;
-			case "date":
+			case "date": {
 				fieldValue = todo.getDueDate();
-				const today = formatISO(new Date(), {representation: 'date'});
+				const today = formatISO(new Date(), { representation: "date" });
 				inputEl = `<input min="${today}" type="date" name="todo-${fieldType}-input" id="todo-${fieldType}-input"/>`;
 				break;
+			}
 			default:
 				break;
 		}
@@ -361,8 +367,7 @@ class TodoUI {
 		return document.getElementById("todo-edit-form");
 	}
 
-	renderClearConfirmation(type)
-	{
+	renderClearConfirmation(type) {
 		this.#toggleOverlay();
 		const dialogTitle = document.querySelector(".dialog-title");
 		const dialogBody = document.querySelector(".dialog-body");
@@ -372,7 +377,7 @@ class TodoUI {
 			<input type="button" value="Yes" />
 			<input type="button" value="No" />
 		</form>
-		`
+		`;
 		const clearForm = document.getElementById("clear-confirm");
 		return clearForm;
 	}

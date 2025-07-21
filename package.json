@@ -1,44 +1,51 @@
 {
-  "name": "todolist",
-  "version": "1.0.0",
-  "description": "A Webpack project with Tailwind CSS and PostCSS",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack serve --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
-    "build:dev": "webpack --config webpack.dev.js",
-    "predeploy": "npm run build",
-    "deploy": "git add -f dist && git commit -m 'Deployment commit' && git subtree push --prefix dist origin gh-pages"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/StilettoDagger/todolist.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/StilettoDagger/todolist/issues"
-  },
-  "homepage": "https://github.com/StilettoDagger/todolist#readme",
-  "devDependencies": {
-    "@iconify/json": "^2.2.352",
-    "@iconify/tailwind4": "^1.0.6",
-    "@tailwindcss/postcss": "^4.1.10",
-    "autoprefixer": "^10.4.21",
-    "css-loader": "^7.1.2",
-    "date-fns": "^4.1.0",
-    "html-webpack-plugin": "^5.6.3",
-    "postcss": "^8.5.6",
-    "postcss-loader": "^8.1.1",
-    "postcss-nested": "^7.0.2",
-    "style-loader": "^4.0.0",
-    "tailwind": "^4.0.0",
-    "tailwindcss": "^4.1.10",
-    "webpack": "^5.99.9",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2",
-    "webpack-merge": "^6.0.1"
-  }
+	"name": "todolist",
+	"version": "1.0.0",
+	"description": "A Webpack project with Tailwind CSS and PostCSS",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "webpack serve --open --config webpack.dev.js",
+		"build": "webpack --config webpack.prod.js",
+		"build:dev": "webpack --config webpack.dev.js",
+		"predeploy": "npm run build",
+		"deploy": "git add -f dist && git commit -m 'Deployment commit' && git subtree push --prefix dist origin gh-pages"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/StilettoDagger/todolist.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/StilettoDagger/todolist/issues"
+	},
+	"homepage": "https://github.com/StilettoDagger/todolist#readme",
+	"devDependencies": {
+		"@eslint/css": "^0.10.0",
+		"@eslint/js": "^9.31.0",
+		"@eslint/json": "^0.13.0",
+		"@iconify/json": "^2.2.352",
+		"@iconify/tailwind4": "^1.0.6",
+		"@tailwindcss/postcss": "^4.1.10",
+		"autoprefixer": "^10.4.21",
+		"css-loader": "^7.1.2",
+		"date-fns": "^4.1.0",
+		"eslint": "^9.31.0",
+		"eslint-config-prettier": "^10.1.8",
+		"globals": "^16.3.0",
+		"html-webpack-plugin": "^5.6.3",
+		"postcss": "^8.5.6",
+		"postcss-loader": "^8.1.1",
+		"postcss-nested": "^7.0.2",
+		"prettier": "3.6.2",
+		"style-loader": "^4.0.0",
+		"tailwind": "^4.0.0",
+		"tailwindcss": "^4.1.10",
+		"webpack": "^5.99.9",
+		"webpack-cli": "^6.0.1",
+		"webpack-dev-server": "^5.2.2",
+		"webpack-merge": "^6.0.1"
+	}
 }

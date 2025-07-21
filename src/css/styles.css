@@ -3,12 +3,12 @@
 @plugin "@iconify/tailwind4";
 
 @theme {
-    --font-inter: "Inter", sans-serif;
-    --font-noto-sans: "Noto Sans", sans-serif;
-    --font-title: "Carattere", handwriting;
-    --color-primary: #1b76ff;
-    --color-todogroups: #ADD5F7;
-    --color-todos: #7ABAF2;
+	--font-inter: "Inter", sans-serif;
+	--font-noto-sans: "Noto Sans", sans-serif;
+	--font-title: "Carattere", handwriting;
+	--color-primary: #1b76ff;
+	--color-todogroups: #add5f7;
+	--color-todos: #7abaf2;
 }
 
 /* 
@@ -17,313 +17,311 @@ TODO: Improve UI and CSS layout
 
 html,
 body {
-    @apply h-screen;
+	@apply h-screen;
 }
 
 @media screen and (max-height: 48rem) {
-    html,
-    body {
-        @apply min-h-screen h-auto;
-    }
+	html,
+	body {
+		@apply min-h-screen h-auto;
+	}
 }
 
 body {
-    @apply font-noto-sans flex flex-col py-12 bg-neutral-50 box-border;
+	@apply font-noto-sans flex flex-col py-12 bg-neutral-50 box-border;
 }
 
 .app-container {
-    @apply h-full items-center flex flex-col grow gap-12;
+	@apply h-full items-center flex flex-col grow gap-12;
 }
 
 #app-title {
-    @apply w-2/3 font-title text-center text-7xl lg:text-9xl text-black font-bold border-gray-400 border-b;
+	@apply w-2/3 font-title text-center text-7xl lg:text-9xl text-black font-bold border-gray-400 border-b;
 }
 
 #app {
-    @apply overflow-y-auto bg-gray-200 grid grid-cols-1 lg:grid-cols-[minmax(300px,1fr)_4fr] grid-rows-[auto_auto_1fr] lg:grid-rows-[auto_1fr_auto] items-center font-noto-sans w-[95%] xl:w-2/3 rounded-2xl border-3 border-dashed shadow-2xl grow;
+	@apply overflow-y-auto bg-gray-200 grid grid-cols-1 lg:grid-cols-[minmax(300px,1fr)_4fr] grid-rows-[auto_auto_1fr] lg:grid-rows-[auto_1fr_auto] items-center font-noto-sans w-[95%] xl:w-2/3 rounded-2xl border-3 border-dashed shadow-2xl grow;
 }
 
 .todo-groups {
-    @apply relative items-center row-span-1 lg:row-span-3 self-stretch flex flex-row border-b-2 lg:flex-col lg:border-r-2 lg:border-b-0 border-gray-400;
+	@apply relative items-center row-span-1 lg:row-span-3 self-stretch flex flex-row border-b-2 lg:flex-col lg:border-r-2 lg:border-b-0 border-gray-400;
 }
 
 .group-open .todo-groups-list {
-    @apply flex absolute z-20 top-15 bg-black/25 backdrop-blur-lg;
+	@apply flex absolute z-20 top-15 bg-black/25 backdrop-blur-lg;
 }
 
 .todo-groups-header {
-    @apply order-1 lg:order-none lg:min-h-20 lg:w-full text-center flex gap-4 lg:block items-center font-bold p-4 text-lg lg:text-2xl lg:border-b-2 border-gray-400;
+	@apply order-1 lg:order-none lg:min-h-20 lg:w-full text-center flex gap-4 lg:block items-center font-bold p-4 text-lg lg:text-2xl lg:border-b-2 border-gray-400;
 }
 
 .todo-groups-header > h2 {
-    @apply h-full flex flex-col items-center justify-center;
+	@apply h-full flex flex-col items-center justify-center;
 }
 
 .todo-main {
-    @apply flex flex-col overflow-y-auto lg:px-4 lg:col-start-2 lg:row-start-2 self-stretch row-span-2 relative bg-gray-100;
+	@apply flex flex-col overflow-y-auto lg:px-4 lg:col-start-2 lg:row-start-2 self-stretch row-span-2 relative bg-gray-100;
 }
 
 .empty-msg {
-    @apply text-shadow-sm empty:hidden my-auto mx-4 text-xl lg:p-0 lg:text-3xl text-black/50 italic font-extralight text-center;
+	@apply text-shadow-sm empty:hidden my-auto mx-4 text-xl lg:p-0 lg:text-3xl text-black/50 italic font-extralight text-center;
 }
 
 .todo-main-header {
-    @apply lg:min-h-20 lg:col-start-2 lg:col-end-3 row-start-2 row-end-3 lg:row-start-1 lg:row-end-2 flex flex-row text-lg justify-between items-center lg:text-2xl text-center border-b-2 border-gray-400 px-2 lg:px-4 py-4 font-bold;
+	@apply lg:min-h-20 lg:col-start-2 lg:col-end-3 row-start-2 row-end-3 lg:row-start-1 lg:row-end-2 flex flex-row text-lg justify-between items-center lg:text-2xl text-center border-b-2 border-gray-400 px-2 lg:px-4 py-4 font-bold;
 }
 
-.todo-main-header.off
-{
-    @apply hidden;
+.todo-main-header.off {
+	@apply hidden;
 }
 
 #add-new-todo {
-    @apply flex flex-row items-center text-lg bg-green-700 rounded-full text-gray-100 cursor-pointer p-2 hover:bg-green-800;
+	@apply flex flex-row items-center text-lg bg-green-700 rounded-full text-gray-100 cursor-pointer p-2 hover:bg-green-800;
 }
 
-#add-new-todo .button-desc, #clear-todos .button-desc {
-    @apply text-lg;
+#add-new-todo .button-desc,
+#clear-todos .button-desc {
+	@apply text-lg;
 }
 
 .todo-list {
-    @apply empty:hidden flex flex-col overflow-y-auto;
+	@apply empty:hidden flex flex-col overflow-y-auto;
 }
 
 .todo-item {
-    @apply shadow-xl grid grid-cols-[auto_1fr_auto] auto-rows-auto items-center gap-4 text-neutral-700 bg-gray-200 m-2 lg:m-4 pr-3 rounded-2xl;
+	@apply shadow-xl grid grid-cols-[auto_1fr_auto] auto-rows-auto items-center gap-4 text-neutral-700 bg-gray-200 m-2 lg:m-4 pr-3 rounded-2xl;
 }
 
-.todo-item.checked, .todo-item.checked .todo-title {
-    @apply text-neutral-500 line-through;
+.todo-item.checked,
+.todo-item.checked .todo-title {
+	@apply text-neutral-500 line-through;
 }
 
 .todo-info {
-    @apply text-sm lg:text-base p-1 min-w-0 flex flex-col self-center gap-1 row-span-3 col-start-2 col-end-3;
+	@apply text-sm lg:text-base p-1 min-w-0 flex flex-col self-center gap-1 row-span-3 col-start-2 col-end-3;
 }
 
 p.todo-date {
-    @apply grid grid-cols-[auto_auto] justify-start sm:flex;
+	@apply grid grid-cols-[auto_auto] justify-start sm:flex;
 }
 
 .todo-remaining-time {
-    @apply col-start-2 sm:before:content-['-'] italic;
+	@apply col-start-2 sm:before:content-['-'] italic;
 }
 
 .todo-date.overdue .todo-remaining-time {
-    @apply text-red-700 font-bold;
+	@apply text-red-700 font-bold;
 }
 
 .todo-item.checked .todo-remaining-time {
-    @apply hidden;
+	@apply hidden;
 }
 
 .todo-edit {
-    @apply lg:invisible cursor-pointer text-green-700 hover:text-green-800 lg:group-hover/edit:visible;
+	@apply lg:invisible cursor-pointer text-green-700 hover:text-green-800 lg:group-hover/edit:visible;
 }
 
-.todo-edit span, .todo-check span
-{
-    @apply text-xl lg:text-2xl;
+.todo-edit span,
+.todo-check span {
+	@apply text-xl lg:text-2xl;
 }
 
 .todo-info > * {
-    @apply flex flex-row gap-2;
+	@apply flex flex-row gap-2;
 }
 
-.todo-desc, .todo-title {
-    @apply break-all;
+.todo-desc,
+.todo-title {
+	@apply break-all;
 }
 
-.todo-info button:disabled
-{
-    @apply invisible;
+.todo-info button:disabled {
+	@apply invisible;
 }
 
 .todo-check {
-    @apply p-1 rounded-l-2xl text-gray-700 self-stretch col-start-1 col-end-2 row-start-1 row-span-3 cursor-pointer hover:text-black;
+	@apply p-1 rounded-l-2xl text-gray-700 self-stretch col-start-1 col-end-2 row-start-1 row-span-3 cursor-pointer hover:text-black;
 }
 
 .todo-item.todo-normal .todo-check {
-    @apply bg-sky-300;
+	@apply bg-sky-300;
 }
 
 .todo-item.todo-low .todo-check {
-    @apply bg-emerald-300;
+	@apply bg-emerald-300;
 }
 
 .todo-item.todo-high .todo-check {
-    @apply bg-amber-300;
+	@apply bg-amber-300;
 }
 
 .todo-item.checked .todo-check {
-    @apply bg-gray-300;
+	@apply bg-gray-300;
 }
 
 .todo-del {
-    @apply lg:invisible text-red-600 col-start-3 col-end-4 row-start-2 row-end-3 cursor-pointer hover:text-red-700 group-hover/item:visible;
+	@apply lg:invisible text-red-600 col-start-3 col-end-4 row-start-2 row-end-3 cursor-pointer hover:text-red-700 group-hover/item:visible;
 }
 
-.todo-check span, .todo-del span {
-    @apply text-3xl;
+.todo-check span,
+.todo-del span {
+	@apply text-3xl;
 }
 
 .todo-title {
-    @apply text-black text-lg lg:text-xl;
+	@apply text-black text-lg lg:text-xl;
 }
 
 .todo-desc {
-    @apply italic;
+	@apply italic;
 }
 
 .overlay {
-    @apply h-screen w-screen z-40 fixed top-0 hidden bg-neutral-900/0;
+	@apply h-screen w-screen z-40 fixed top-0 hidden bg-neutral-900/0;
 }
 
 .overlay-active {
-    @apply flex flex-col bg-neutral-900/70;
+	@apply flex flex-col bg-neutral-900/70;
 }
 
 .dialog {
-    @apply w-80 lg:w-96 rounded-2xl shadow-2xl flex flex-col text-gray-200 m-auto z-500 bg-blue-900;
+	@apply w-80 lg:w-96 rounded-2xl shadow-2xl flex flex-col text-gray-200 m-auto z-500 bg-blue-900;
 }
 
 .dialog-header {
-    @apply pt-4 px-1 relative;
+	@apply pt-4 px-1 relative;
 }
 
 .close-dialog {
-    @apply absolute top-2 cursor-pointer hover:text-neutral-300;
+	@apply absolute top-2 cursor-pointer hover:text-neutral-300;
 }
 
 .close-dialog span {
-    @apply text-3xl;
+	@apply text-3xl;
 }
 
 .dialog-title {
-    @apply text-2xl text-center font-bold underline max-w-10/12 mx-auto mb-4;
+	@apply text-2xl text-center font-bold underline max-w-10/12 mx-auto mb-4;
 }
 
 .dialog-body {
-    @apply p-6 pt-0;
+	@apply p-6 pt-0;
 }
 
 form label {
-    @apply text-gray-200 font-bold;
+	@apply text-gray-200 font-bold;
 }
 
 form input,
-form textarea, form select {
-    @apply bg-gray-800 p-2 rounded-xl shadow-xl outline-gray-300;
+form textarea,
+form select {
+	@apply bg-gray-800 p-2 rounded-xl shadow-xl outline-gray-300;
 }
 
 form button[type="submit"] {
-    @apply bg-emerald-700 mt-4 font-bold min-w-1/2 mx-auto p-2 rounded-full shadow-xl cursor-pointer hover:bg-emerald-800;
+	@apply bg-emerald-700 mt-4 font-bold min-w-1/2 mx-auto p-2 rounded-full shadow-xl cursor-pointer hover:bg-emerald-800;
 }
 
 form,
-form>div {
-    @apply flex flex-col gap-2
+form > div {
+	@apply flex flex-col gap-2;
 }
 
 #clear-confirm {
-    @apply flex flex-row;
+	@apply flex flex-row;
 }
 
 #clear-confirm input {
-    @apply flex-1 cursor-pointer text-gray-200 font-bold;
+	@apply flex-1 cursor-pointer text-gray-200 font-bold;
 }
 
-#clear-confirm input[value='Yes']
-{
-    @apply bg-rose-700 hover:bg-rose-800;
+#clear-confirm input[value="Yes"] {
+	@apply bg-rose-700 hover:bg-rose-800;
 }
 
-#clear-confirm input[value='No']
-{
-    @apply bg-emerald-700 hover:bg-green-800;
+#clear-confirm input[value="No"] {
+	@apply bg-emerald-700 hover:bg-green-800;
 }
 
 .group-control-buttons {
-    @apply order-0 lg:order-none p-2 py-4 gap-2 flex justify-center row-start-3 row-end-4 col-start-1 col-end-2;
+	@apply order-0 lg:order-none p-2 py-4 gap-2 flex justify-center row-start-3 row-end-4 col-start-1 col-end-2;
 }
 
 #add-new-group {
-    @apply p-2 font-bold flex flex-row items-center text-gray-100 bg-blue-700 rounded-full cursor-pointer hover:bg-blue-800;
+	@apply p-2 font-bold flex flex-row items-center text-gray-100 bg-blue-700 rounded-full cursor-pointer hover:bg-blue-800;
 }
 
 #clear-groups {
-    @apply gap-2 p-2 flex flex-row items-center text-gray-100 bg-red-700 hover:bg-red-800 rounded-full font-bold cursor-pointer;
+	@apply gap-2 p-2 flex flex-row items-center text-gray-100 bg-red-700 hover:bg-red-800 rounded-full font-bold cursor-pointer;
 }
 
 #clear-todos {
-    @apply flex flex-row rounded-full text-gray-100 p-2 gap-2 items-center bg-red-700 hover:bg-red-800 cursor-pointer;
+	@apply flex flex-row rounded-full text-gray-100 p-2 gap-2 items-center bg-red-700 hover:bg-red-800 cursor-pointer;
 }
 
 button .button-desc {
-    @apply text-sm hidden lg:block;
+	@apply text-sm hidden lg:block;
 }
 
 button span {
-    @apply text-xl lg:text-2xl;
+	@apply text-xl lg:text-2xl;
 }
 
 .todo-groups:has(.todo-groups-list:empty) #group-toggle-btn {
-    @apply hidden;
+	@apply hidden;
 }
 
-#group-toggle-btn
-{
-    @apply lg:hidden;
+#group-toggle-btn {
+	@apply lg:hidden;
 }
 
-#group-toggle-btn span
-{
-    @apply transition-transform duration-100;
+#group-toggle-btn span {
+	@apply transition-transform duration-100;
 }
 
-#group-toggle-btn span
-{
-    @apply text-3xl;
+#group-toggle-btn span {
+	@apply text-3xl;
 }
 
 .group-open #group-toggle-btn span {
-    @apply rotate-180;
+	@apply rotate-180;
 }
 
 .current-group {
-    @apply order-2 lg:order-none text-center ml-auto mr-4 font-bold lg:hidden;
+	@apply order-2 lg:order-none text-center ml-auto mr-4 font-bold lg:hidden;
 }
 
 .todo-groups-list {
-    @apply w-full empty:invisible lg:border-b-2 border-gray-400 bg-gray-300 p-4 hidden lg:flex flex-col gap-4 lg:overflow-y-auto items-center grow;
+	@apply w-full empty:invisible lg:border-b-2 border-gray-400 bg-gray-300 p-4 hidden lg:flex flex-col gap-4 lg:overflow-y-auto items-center grow;
 }
 
 .todo-group-item {
-    @apply shadow-xl cursor-pointer items-center w-full text-gray-700 bg-gray-100 hover:bg-yellow-100 border-gray-500 border rounded-xl p-2 font-normal grid grid-cols-2 break-words;
+	@apply shadow-xl cursor-pointer items-center w-full text-gray-700 bg-gray-100 hover:bg-yellow-100 border-gray-500 border rounded-xl p-2 font-normal grid grid-cols-2 break-words;
 }
 
 .todo-group-buttons {
-    @apply flex flex-row justify-end gap-1 items-center flex-wrap;
+	@apply flex flex-row justify-end gap-1 items-center flex-wrap;
 }
 
 .todo-group-del {
-    @apply cursor-pointer text-red-600 hover:text-red-700;
+	@apply cursor-pointer text-red-600 hover:text-red-700;
 }
 
 .todo-group-edit {
-    @apply cursor-pointer text-green-600 hover:text-green-700;
+	@apply cursor-pointer text-green-600 hover:text-green-700;
 }
 
 .todo-group-info {
-    @apply cursor-pointer text-blue-700 hover:text-blue-900;
+	@apply cursor-pointer text-blue-700 hover:text-blue-900;
 }
 
 .group-info {
-    @apply flex flex-col gap-4;
+	@apply flex flex-col gap-4;
 }
 .group-info h3 {
-    @apply font-bold;
+	@apply font-bold;
 }
 
 .group-active {
-    @apply text-black border-0 border-l-red-400 border-l-4 bg-yellow-100 hover:bg-yellow-100 rounded-none rounded-r-2xl;
+	@apply text-black border-0 border-l-red-400 border-l-4 bg-yellow-100 hover:bg-yellow-100 rounded-none rounded-r-2xl;
 }
