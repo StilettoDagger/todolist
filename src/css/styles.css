@@ -255,8 +255,16 @@ form > div {
 	@apply flex cursor-pointer flex-row items-center gap-2 rounded-full bg-red-700 p-2 font-bold text-gray-100 hover:bg-red-800;
 }
 
+#clear-groups.off {
+	@apply hidden;
+}
+
 #clear-todos {
 	@apply flex cursor-pointer flex-row items-center gap-2 rounded-full bg-red-700 p-2 text-gray-100 hover:bg-red-800;
+}
+
+#clear-todos.off {
+	@apply invisible;
 }
 
 button .button-desc {
@@ -291,6 +299,10 @@ button span {
 	@apply order-2 mr-4 ml-auto text-center font-bold lg:order-none lg:hidden;
 }
 
+.current-group.off {
+	@apply hidden;
+}
+
 .todo-groups-list {
 	@apply hidden w-full grow flex-col items-center gap-4 border-gray-400 bg-gray-300 p-4 empty:invisible lg:flex lg:overflow-y-auto lg:border-b-2;
 }
@@ -318,6 +330,7 @@ button span {
 .group-info {
 	@apply flex flex-col gap-4;
 }
+
 .group-info h3 {
 	@apply font-bold;
 }

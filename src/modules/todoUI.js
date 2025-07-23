@@ -1,12 +1,56 @@
 import { formatISO } from "date-fns";
 
+function handleOutsideClick(e) {
+	const todoGroupsList = document.querySelector(".todo-groups-list");
+	if (todoGroupsList && todoGroupsList.contains(e.target)) {
+		return;
+	}
+	closeMenu();
+}
+
+function closeMenu() {
+	const todoGroupsContainer = document.querySelector(".todo-groups");
+	if (todoGroupsContainer) {
+		const isOpen = todoGroupsContainer.classList.contains("group-open");
+		if (isOpen) {
+			todoGroupsContainer.classList.remove("group-open");
+			document.removeEventListener("click", handleOutsideClick);
+		}
+	}
+}
+
 /**
  * Class responsible for rendering and updating the application UI elements on the DOM.
  */
 class TodoUI {
-	constructor(containerID) {
+	constructor(containerID, todoManager) {
 		this.appContainer = document.getElementById(containerID);
+		this.todoManager = todoManager;
 		this.#renderOverlay();
+	}
+
+	initialize() {
+		this.#addStaticHandlers();
+	}
+
+	render(todoGroups, currentGroup) {
+		this.renderGroups(todoGroups);
+		if (currentGroup) {
+			this.renderTodoDiv(currentGroup);
+			this.renderTodos(currentGroup);
+		} else {
+			this.renderNoGroupsMessage();
+		}
+		const clearGroupsBtn = document.getElementById("clear-groups");
+		const currentGroupEl = document.querySelector(".current-group");
+
+		if (todoGroups.length === 0) {
+			clearGroupsBtn.classList.add("off");
+			currentGroupEl.classList.add("off");
+		} else {
+			clearGroupsBtn.classList.remove("off");
+			currentGroupEl.classList.remove("off");
+		}
 	}
 
 	/**
@@ -46,9 +90,10 @@ class TodoUI {
 			groupItem.setAttribute("data-index", index);
 			todoGroupsList.appendChild(groupItem);
 		});
+		this.#addGroupHandlers();
 	}
 
-	renderTodoDiv() {
+	renderTodoDiv(currentGroup) {
 		const todosHeader = this.appContainer.querySelector(".todo-main-header");
 		todosHeader.classList.remove("off");
 		todosHeader.innerHTML = `
@@ -59,6 +104,24 @@ class TodoUI {
 		const emptyMsg = this.appContainer.querySelector(".empty-msg");
 		emptyMsg.textContent =
 			"No todos found for this project. Add some todos and start getting things done.";
+
+		const clearGroupsBtn = document.getElementById("clear-todos");
+
+		if (currentGroup.todos.length === 0) {
+			clearGroupsBtn.classList.add("off");
+		} else {
+			clearGroupsBtn.classList.remove("off");
+		}
+
+		document
+			.getElementById("add-new-todo")
+			.addEventListener("click", () =>
+				this.renderAddTodoDialog(this.todoManager.currentGroup)
+			);
+
+		clearGroupsBtn.addEventListener("click", () =>
+			this.renderClearConfirmation("todos")
+		);
 	}
 
 	/**
@@ -148,6 +211,7 @@ class TodoUI {
 			todoItem.appendChild(todoDel);
 			todoList.appendChild(todoItem);
 		});
+		this.#addTodoButtonHandlers();
 	}
 
 	/**
@@ -228,7 +292,16 @@ class TodoUI {
 			<button type="submit">Add group</button>
 		</form>
 		`;
-		return document.getElementById("add-group-form");
+		const form = document.getElementById("add-group-form");
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			if (form.checkValidity()) {
+				const name = form.querySelector("#group-name").value;
+				const desc = form.querySelector("#group-desc").value;
+				this.todoManager.addGroup(name, desc);
+				this.removeOverlay();
+			}
+		});
 	}
 
 	renderEditGroupDialog(groupToEdit) {
@@ -249,7 +322,19 @@ class TodoUI {
 			<button type="submit">Edit project</button>
 		</form>
 		`;
-		return document.getElementById("edit-group-form");
+		const form = document.getElementById("edit-group-form");
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			if (form.checkValidity()) {
+				const nameInput = form.querySelector("#group-name");
+				const descInput = form.querySelector("#group-desc");
+				const name =
+					nameInput.value !== "" ? nameInput.value : nameInput.placeholder;
+				const desc = descInput.value;
+				this.todoManager.editGroup(groupToEdit, name, desc);
+				this.removeOverlay();
+			}
+		});
 	}
 
 	renderGroupInfo(group) {
@@ -318,7 +403,20 @@ class TodoUI {
 		const dueDateInput = document.getElementById("todo-date");
 		const today = formatISO(new Date(), { representation: "date" });
 		dueDateInput.min = today;
-		return document.getElementById("add-todo-form");
+
+		const form = document.getElementById("add-todo-form");
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			if (form.checkValidity()) {
+				const name = form.querySelector("#todo-name").value;
+				const desc = form.querySelector("#todo-desc").value;
+				const prio = Number(form.querySelector("#todo-prio").value);
+				const dateValue = form.querySelector("#todo-date").value;
+				const date = dateValue ? new Date(dateValue) : null;
+				this.todoManager.addTodo(name, desc, date, prio);
+				this.removeOverlay();
+			}
+		});
 	}
 
 	renderTodoEdit(todo, fieldType) {
@@ -364,7 +462,16 @@ class TodoUI {
 			<button type="submit">Edit ${fieldType === "desc" ? "description" : fieldType === "prio" ? "priority" : fieldType}</button>
 		</form>
 		`;
-		return document.getElementById("todo-edit-form");
+		const form = document.getElementById("todo-edit-form");
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			if (form.checkValidity()) {
+				const input = form.querySelector(`#todo-${fieldType}-input`);
+				const value = input.value ? input.value : input.placeholder;
+				this.todoManager.editTodo(todo, fieldType, value);
+				this.removeOverlay();
+			}
+		});
 	}
 
 	renderClearConfirmation(type) {
@@ -379,7 +486,162 @@ class TodoUI {
 		</form>
 		`;
 		const clearForm = document.getElementById("clear-confirm");
-		return clearForm;
+		clearForm.addEventListener("click", (e) => {
+			if (e.target.type === "button") {
+				if (e.target.value === "Yes") {
+					if (type === "projects") {
+						this.todoManager.clearGroups();
+					} else {
+						this.todoManager.clearTodos();
+					}
+				}
+				this.removeOverlay();
+			}
+		});
+	}
+
+	#addGroupHandlers() {
+		this.#addRemoveGroupHandlers();
+		this.#addEditGroupHandlers();
+		this.#addGroupInfoHandlers();
+		this.#addGroupSwitchHandlers();
+	}
+
+	#addRemoveGroupHandlers() {
+		const removeButtons = document.querySelectorAll(".todo-group-del");
+		removeButtons.forEach((button) => {
+			button.addEventListener("click", (e) => {
+				e.stopPropagation();
+				const groupItem = e.target.closest("li[data-index]");
+				const index = Number(groupItem.getAttribute("data-index"));
+				this.todoManager.removeGroup(index);
+				closeMenu();
+			});
+		});
+	}
+
+	#addEditGroupHandlers() {
+		const editButtons = document.querySelectorAll(".todo-group-edit");
+		editButtons.forEach((button) => {
+			button.addEventListener("click", (e) => {
+				e.stopPropagation();
+				const groupItem = e.target.closest("li[data-index]");
+				const index = Number(groupItem.getAttribute("data-index"));
+				const groupToEdit = this.todoManager.todoGroups[index];
+				this.renderEditGroupDialog(groupToEdit);
+				closeMenu();
+			});
+		});
+	}
+
+	#addGroupInfoHandlers() {
+		const infoButtons = document.querySelectorAll(".todo-group-info");
+		infoButtons.forEach((button) => {
+			button.addEventListener("click", (e) => {
+				e.stopPropagation();
+				const groupItem = e.target.closest("li[data-index]");
+				const index = groupItem.getAttribute("data-index");
+				const groupToDisplay = this.todoManager.todoGroups[index];
+				this.renderGroupInfo(groupToDisplay);
+				closeMenu();
+			});
+		});
+	}
+
+	#addGroupSwitchHandlers() {
+		const groupItems = document.querySelectorAll(".todo-group-item");
+		groupItems.forEach((groupItem) => {
+			groupItem.addEventListener("click", (e) => {
+				e.stopPropagation();
+				const groupSelected = e.target.closest("li[data-index]");
+				const groupIndex = Number(groupSelected.getAttribute("data-index"));
+				this.todoManager.switchGroup(groupIndex);
+				closeMenu();
+			});
+		});
+	}
+
+	#addTodoButtonHandlers() {
+		this.#addTodoEditHandlers();
+		this.#addTodoToggleHandlers();
+		this.#addTodoRemoveHandlers();
+	}
+
+	#addTodoEditHandlers() {
+		const todoItems = document.querySelectorAll(".todo-item");
+		todoItems.forEach((todoItem) => {
+			const todoIndex = Number(todoItem.getAttribute("data-index"));
+			const todo = this.todoManager.currentGroup.getTodo(todoIndex);
+			const editButtons = todoItem.querySelectorAll(".todo-edit");
+			const editTypeRegex = /todo-edit-(\w+)/;
+			editButtons.forEach((editButton) => {
+				const matchResult = editButton.className.match(editTypeRegex);
+				let fieldType = "";
+				if (matchResult) {
+					fieldType = matchResult[1];
+				}
+				editButton.addEventListener("click", (e) => {
+					e.stopPropagation();
+					this.renderTodoEdit(todo, fieldType);
+				});
+			});
+		});
+	}
+
+	#addTodoToggleHandlers() {
+		const todoToggleButtons = document.querySelectorAll(".todo-check");
+		todoToggleButtons.forEach((todoToggleButton) => {
+			todoToggleButton.addEventListener("click", () => {
+				const todoIndex = Number(
+					todoToggleButton.closest("li[data-index]").getAttribute("data-index")
+				);
+				this.todoManager.toggleTodo(todoIndex);
+			});
+		});
+	}
+
+	#addTodoRemoveHandlers() {
+		const todoRemoveButtons = document.querySelectorAll(".todo-del");
+		todoRemoveButtons.forEach((todoRemoveButton) => {
+			todoRemoveButton.addEventListener("click", () => {
+				const todoIndex = Number(
+					todoRemoveButton.closest("li[data-index]").getAttribute("data-index")
+				);
+				this.todoManager.removeTodo(todoIndex);
+			});
+		});
+	}
+
+	#addStaticHandlers() {
+		document
+			.getElementById("add-new-group")
+			.addEventListener("click", () => this.renderAddGroupDialog());
+
+		document.getElementById("clear-groups").addEventListener("click", () => {
+			if (this.todoManager.todoGroups.length > 0) {
+				this.renderClearConfirmation("projects");
+			}
+		});
+
+		this.#addGroupExpandHandler();
+	}
+
+	#addGroupExpandHandler() {
+		const groupToggleBtn = document.getElementById("group-toggle-btn");
+		const todoGroupsContainer = document.querySelector(".todo-groups");
+
+		groupToggleBtn.addEventListener("click", (e) => {
+			e.stopPropagation();
+
+			const isOpen = todoGroupsContainer.classList.contains("group-open");
+
+			if (isOpen) {
+				closeMenu();
+			} else {
+				todoGroupsContainer.classList.add("group-open");
+				document.addEventListener("click", handleOutsideClick);
+			}
+		});
 	}
 }
 

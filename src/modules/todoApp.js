@@ -1,28 +1,42 @@
 import TodoGroup from "./todoGroup";
 import TodoManager from "./todoManager";
+import TodoUI from "./todoUI";
 
 class TodoApp {
 	constructor(containerID) {
 		this.containerID = containerID;
 		this.todoManager = null;
+		this.todoUI = null;
 	}
 
 	initialize() {
-		this.loadFromStorage();
-		this.todoManager.initialize();
+		const todoGroups = this.loadFromStorage();
+		this.todoManager = new TodoManager(todoGroups);
+		this.todoUI = new TodoUI(this.containerID, this.todoManager);
+
+		this.todoManager.bindOnStateChange(() => {
+			this.todoUI.render(
+				this.todoManager.todoGroups,
+				this.todoManager.currentGroup
+			);
+			this.saveToStorage();
+		});
+
+		this.todoUI.initialize();
+		// Initial render
+		this.todoUI.render(
+			this.todoManager.todoGroups,
+			this.todoManager.currentGroup
+		);
 	}
 
 	loadFromStorage() {
 		const groupsString = localStorage.getItem("todoGroups");
 		if (groupsString && groupsString !== "[]") {
 			const groupsData = JSON.parse(groupsString);
-			const todoGroups = groupsData.map((groupData) =>
-				TodoGroup.fromJSON(groupData)
-			);
-			this.todoManager = new TodoManager(this.containerID, todoGroups);
-		} else {
-			this.todoManager = new TodoManager(this.containerID);
+			return groupsData.map((groupData) => TodoGroup.fromJSON(groupData));
 		}
+		return [];
 	}
 
 	saveToStorage() {

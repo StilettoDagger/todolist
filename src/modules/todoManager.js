@@ -1,424 +1,105 @@
 import TodoGroup from "./todoGroup";
-import TodoUI from "./todoUI";
-
-function handleOutsideClick(e) {
-	const todoGroupsList = document.querySelector(".todo-groups-list");
-	if (todoGroupsList.contains(e.target)) {
-		return;
-	}
-	closeMenu();
-}
-
-function closeMenu() {
-	const todoGroupsContainer = document.querySelector(".todo-groups");
-	const isOpen = todoGroupsContainer.classList.contains("group-open");
-	if (isOpen) {
-		todoGroupsContainer.classList.remove("group-open");
-		document.removeEventListener("click", handleOutsideClick);
-	}
-}
 
 /**
  * Class for managing todo groups and todo lists within each group.
- * Includes methods for adding, editing, and
  */
 class TodoManager {
-	constructor(containerID, todoGroups = []) {
-		this.todoUI = new TodoUI(containerID);
+	constructor(todoGroups = []) {
 		this.todoGroups = todoGroups;
-		this.currentGroup = null;
-		this.currentGroupEl = null;
+		this.currentGroup = this.todoGroups.find((g) => g.isActive()) || null;
+		this.onStateChange = () => {};
 	}
 
-	/**
-	 * Adds a handler for the button responsible for creating a new todo group
-	 */
-	#addNewGroupHandler() {
-		const addTodoGroupButton = document.getElementById("add-new-group");
-		addTodoGroupButton.addEventListener("click", () => {
-			// Opens add group window
-			const addGroupForm = this.todoUI.renderAddGroupDialog();
-			this.#addNewGroupSubmitHandler(addGroupForm);
-		});
+	bindOnStateChange(callback) {
+		this.onStateChange = callback;
 	}
 
-	initialize() {
-		this.#addNewGroupHandler();
-		this.#addClearGroupsHandler();
-		this.#addGroupExpandHandler();
-		this.renderAndAddHandlers();
-		for (const group of this.todoGroups) {
-			if (group.isActive()) {
-				this.currentGroup = group;
-				this.todoUI.renderTodoDiv();
-				this.#addNewTodoHandler();
-				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoButtonHandlers();
-				this.#addClearTodosHandler();
-				break;
-			}
+	addGroup(name, desc) {
+		const newGroup = new TodoGroup(name, desc);
+		if (this.todoGroups.length === 0) {
+			newGroup.toggleActive();
+			this.currentGroup = newGroup;
 		}
+		this.todoGroups.push(newGroup);
+		this.onStateChange();
 	}
 
-	/** Adds a handler for expanding todo groups for smaller screens. */
-	#addGroupExpandHandler() {
-		const groupToggleBtn = document.getElementById("group-toggle-btn");
-		const todoGroupsContainer = document.querySelector(".todo-groups");
-
-		groupToggleBtn.addEventListener("click", (e) => {
-			e.stopPropagation();
-
-			const isOpen = todoGroupsContainer.classList.contains("group-open");
-
-			if (isOpen) {
-				closeMenu();
-			} else {
-				todoGroupsContainer.classList.add("group-open");
-				document.addEventListener("click", handleOutsideClick);
-			}
-		});
+	removeGroup(index) {
+		const removedGroup = this.todoGroups[index];
+		this.todoGroups.splice(index, 1);
+		if (this.currentGroup === removedGroup) {
+			this.currentGroup = null;
+		}
+		this.onStateChange();
 	}
 
-	/** Adds a handler for submitting the form for adding a new group. */
-	#addNewGroupSubmitHandler(addGroupForm) {
-		addGroupForm.addEventListener("submit", (e) => {
-			e.preventDefault();
-
-			if (addGroupForm.checkValidity()) {
-				const groupNameInput = document.getElementById("group-name");
-				const groupDescInput = document.getElementById("group-desc");
-				const groupName = groupNameInput.value;
-				const groupDesc = groupDescInput.value;
-
-				if (this.todoGroups.length === 0) {
-					this.todoUI.renderTodoDiv();
-					this.#addNewTodoHandler();
-					this.#addClearTodosHandler();
-				}
-
-				const todoGroup = new TodoGroup(groupName, groupDesc);
-				if (this.todoGroups.length === 0) {
-					todoGroup.toggleActive();
-				}
-				this.todoGroups.push(todoGroup);
-				this.todoUI.removeOverlay();
-				this.renderAndAddHandlers();
-				if (this.currentGroup === null && this.currentGroupEl === null) {
-					this.currentGroup = this.todoGroups.at(-1);
-					this.currentGroupEl = document.querySelector(
-						`li[data-index="${this.todoGroups.length - 1}"]`
-					);
-				} else {
-					const groupIndex = this.todoGroups.indexOf(this.currentGroup);
-					this.currentGroupEl = document.querySelector(
-						`li[data-index="${groupIndex}"]`
-					);
-				}
-				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoButtonHandlers();
-			}
-		});
+	editGroup(group, name, desc) {
+		group.setGroupName(name);
+		group.setGroupDesc(desc);
+		this.onStateChange();
 	}
 
-	#addClearGroupsHandler() {
-		const clearGroupsBtn = document.getElementById("clear-groups");
-		clearGroupsBtn.addEventListener("click", () => {
-			if (this.todoGroups.length == 0) {
-				return;
-			}
-			const groupsClearForm = this.todoUI.renderClearConfirmation("projects");
-			const inputButtons = groupsClearForm.querySelectorAll(
-				"input[type='button']"
-			);
-			inputButtons.forEach((inputButton) => {
-				inputButton.addEventListener("click", () => {
-					if (inputButton.value === "Yes") {
-						this.todoGroups = [];
-						this.currentGroup = null;
-						this.currentGroupEl = null;
-						this.renderAndAddHandlers();
-						this.todoUI.renderTodos(this.currentGroup);
-						this.todoUI.renderNoGroupsMessage();
-					}
-					this.todoUI.removeOverlay();
-				});
-			});
-		});
+	switchGroup(index) {
+		const selectedGroup = this.todoGroups[index];
+		if (this.currentGroup === selectedGroup) {
+			return;
+		}
+
+		if (this.currentGroup) {
+			this.currentGroup.toggleActive();
+		}
+		this.currentGroup = selectedGroup;
+		this.currentGroup.toggleActive();
+		this.onStateChange();
 	}
 
-	#addClearTodosHandler() {
-		const clearTodosBtn = document.getElementById("clear-todos");
-		clearTodosBtn.addEventListener("click", () => {
-			if (this.currentGroup.todos.length == 0) {
-				return;
-			}
-			const todosClearForm = this.todoUI.renderClearConfirmation("todos");
-			const inputButtons = todosClearForm.querySelectorAll(
-				"input[type='button']"
-			);
-			inputButtons.forEach((inputButton) => {
-				inputButton.addEventListener("click", () => {
-					if (inputButton.value === "Yes") {
-						this.currentGroup.todos = [];
-						this.todoUI.renderTodos(this.currentGroup);
-					}
-					this.todoUI.removeOverlay();
-				});
-			});
-		});
+	clearGroups() {
+		this.todoGroups = [];
+		this.currentGroup = null;
+		this.onStateChange();
 	}
 
-	/** Adds event handlers to remove buttons for removing todo groups. */
-	#addRemoveGroupHandlers() {
-		const removeButtons = document.querySelectorAll(".todo-group-del");
-		removeButtons.forEach((button) => {
-			button.addEventListener("click", (e) => {
-				e.stopPropagation();
-
-				const groupItem = e.target.closest("li[data-index]");
-				const index = Number(groupItem.getAttribute("data-index"));
-				this.todoGroups.splice(index, 1);
-				this.renderAndAddHandlers();
-				if (this.todoGroups.length === 0 || groupItem === this.currentGroupEl) {
-					this.currentGroup = null;
-					this.currentGroupEl = null;
-					this.todoUI.renderNoGroupsMessage();
-				}
-				closeMenu();
-			});
-		});
+	addTodo(name, desc, date, prio) {
+		this.currentGroup.addTodo(name, desc, date, prio);
+		this.onStateChange();
 	}
 
-	/** Adds event handlers to edit buttons for editing info of todo groups. */
-	#addEditGroupHandlers() {
-		const editButtons = document.querySelectorAll(".todo-group-edit");
-		editButtons.forEach((button) => {
-			button.addEventListener("click", (e) => {
-				e.stopPropagation();
-				const groupItem = e.target.closest("li[data-index]");
-				const index = Number(groupItem.getAttribute("data-index"));
-				const groupToEdit = this.todoGroups[index];
-				const editGroupForm = this.todoUI.renderEditGroupDialog(groupToEdit);
-				this.#addEditGroupSubmitHandler(editGroupForm, index);
-				const todoGroupsContainer = document.querySelector(".todo-groups");
-				todoGroupsContainer.classList.remove("group-open");
-			});
-		});
+	removeTodo(index) {
+		this.currentGroup.removeTodo(index);
+		this.onStateChange();
 	}
 
-	/**
-	 * Adds event handler when submitting the edit group form.
-	 * When validated, the todo group is edited and the todo groups are updated.
-	 * @param {Node} editGroupForm - The form that contains the new data to be validated.
-	 * @param {Number} index - The index of the group to edit in the todoGroups array.
-	 */
-	#addEditGroupSubmitHandler(editGroupForm, index) {
-		editGroupForm.addEventListener("submit", (e) => {
-			e.preventDefault();
-
-			if (editGroupForm.checkValidity()) {
-				const groupNameInput = document.getElementById("group-name");
-				const groupDescInput = document.getElementById("group-desc");
-				const groupName =
-					groupNameInput.value !== ""
-						? groupNameInput.value
-						: groupNameInput.placeholder;
-				const groupDesc = groupDescInput.value;
-
-				const groupToEdit = this.todoGroups[index];
-				groupToEdit.setGroupName(groupName);
-				groupToEdit.setGroupDesc(groupDesc);
-				this.todoUI.removeOverlay();
-				const currentIndex = Number(
-					this.currentGroupEl.getAttribute("data-index")
-				);
-				this.renderAndAddHandlers();
-				this.currentGroupEl = document.querySelector(
-					`li[data-index="${currentIndex}"]`
-				);
-			}
-		});
+	editTodo(todo, fieldType, value) {
+		switch (fieldType) {
+			case "title":
+				todo.setTitle(value);
+				break;
+			case "desc":
+				todo.setDesc(value);
+				break;
+			case "prio":
+				todo.setPrio(Number(value));
+				break;
+			case "date":
+				todo.setDate(value);
+				break;
+			default:
+				break;
+		}
+		this.onStateChange();
 	}
 
-	/** Adds event handlers for info buttons to display a todo group info. */
-	#addGroupInfoHandlers() {
-		const infoButtons = document.querySelectorAll(".todo-group-info");
-
-		infoButtons.forEach((button) => {
-			button.addEventListener("click", (e) => {
-				e.stopPropagation();
-				const groupItem = e.target.closest("li[data-index]");
-				const index = groupItem.getAttribute("data-index");
-				const groupToEdit = this.todoGroups[index];
-				this.todoUI.renderGroupInfo(groupToEdit);
-				closeMenu();
-			});
-		});
+	toggleTodo(index) {
+		const todo = this.currentGroup.getTodo(index);
+		todo.toggleItem();
+		this.onStateChange();
 	}
 
-	/** Adds event handlers to todo group items to allow switching between them.  */
-	#addGroupSwitchHandlers() {
-		const groupItems = document.querySelectorAll(".todo-group-item");
-
-		groupItems.forEach((groupItem) => {
-			groupItem.addEventListener("click", (e) => {
-				e.stopPropagation();
-
-				const groupSelected = e.target.closest("li[data-index]");
-				const groupIndex = Number(groupSelected.getAttribute("data-index"));
-				if (this.currentGroupEl === groupSelected) {
-					return;
-				}
-				if (this.currentGroup) {
-					this.currentGroup.toggleActive();
-				}
-				this.currentGroup = this.todoGroups[groupIndex];
-				this.currentGroup.toggleActive();
-				this.renderAndAddHandlers();
-				this.currentGroupEl = document.querySelector(".group-active");
-				this.todoUI.renderTodoDiv();
-				this.#addNewTodoHandler();
-				this.#addClearTodosHandler();
-				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoButtonHandlers();
-				closeMenu();
-			});
-		});
-	}
-
-	/** Renders the groups and adds event handlers to each one */
-	renderAndAddHandlers() {
-		this.todoUI.renderGroups(this.todoGroups);
-		this.#addRemoveGroupHandlers();
-		this.#addEditGroupHandlers();
-		this.#addGroupInfoHandlers();
-		this.#addGroupSwitchHandlers();
-	}
-
-	#addNewTodoHandler() {
-		const todoButton = document.getElementById("add-new-todo");
-		todoButton.addEventListener("click", () => {
-			const todoForm = this.todoUI.renderAddTodoDialog(this.currentGroup);
-			this.#addNewTodoSubmitHandler(todoForm);
-		});
-	}
-
-	#addNewTodoSubmitHandler(todoForm) {
-		todoForm.addEventListener("submit", (e) => {
-			e.preventDefault();
-
-			if (todoForm.checkValidity()) {
-				const todoNameInput = document.getElementById("todo-name");
-				const todoDescInput = document.getElementById("todo-desc");
-				const todoPrioInput = document.getElementById("todo-prio");
-				const todoDueDate = document.getElementById("todo-date");
-				const todoName = todoNameInput.value;
-				const todoDesc = todoDescInput.value;
-				const todoDate = todoDueDate.value ? new Date(todoDueDate.value) : null;
-				const todoPrio = Number(todoPrioInput.value);
-
-				this.currentGroup.addTodo(todoName, todoDesc, todoDate, todoPrio);
-				this.todoUI.removeOverlay();
-				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoButtonHandlers();
-			}
-		});
-	}
-
-	#addTodoEditHandlers() {
-		const todoItems = document.querySelectorAll(".todo-item");
-
-		todoItems.forEach((todoItem) => {
-			const todoIndex = Number(todoItem.getAttribute("data-index"));
-			const todo = this.currentGroup.getTodo(todoIndex);
-			const editButtons = todoItem.querySelectorAll(".todo-edit");
-			const editTypeRegex = /todo-edit-(\w+)/;
-			editButtons.forEach((editButton) => {
-				const matchResult = editButton.className.match(editTypeRegex);
-				let fieldType = "";
-				if (matchResult) {
-					fieldType = matchResult[1];
-				}
-				editButton.addEventListener("click", (e) => {
-					e.stopPropagation();
-					console.log(fieldType);
-					const todoEditForm = this.todoUI.renderTodoEdit(todo, fieldType);
-					this.#addTodoEditSubmitHandler(todoEditForm, todo, fieldType);
-				});
-			});
-		});
-	}
-
-	#addTodoEditSubmitHandler(todoEditForm, todo, fieldType) {
-		todoEditForm.addEventListener("submit", (e) => {
-			e.preventDefault();
-
-			if (todoEditForm.checkValidity()) {
-				const fieldInput = document.getElementById(`todo-${fieldType}-input`);
-				const fieldValue = fieldInput.value
-					? fieldInput.value
-					: fieldInput.placeholder;
-
-				switch (fieldType) {
-					case "title":
-						todo.setTitle(fieldValue);
-						break;
-					case "desc":
-						todo.setDesc(fieldValue);
-						break;
-					case "prio": {
-						const prioValue = Number(fieldValue);
-						todo.setPrio(prioValue);
-						break;
-					}
-					case "date":
-						todo.setDate(fieldValue);
-						break;
-					default:
-						break;
-				}
-				this.todoUI.removeOverlay();
-				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoButtonHandlers();
-			}
-		});
-	}
-
-	#addTodoToggleHandlers() {
-		const todoToggleButtons = document.querySelectorAll(".todo-check");
-
-		todoToggleButtons.forEach((todoToggleButton) => {
-			const todoIndex = Number(
-				todoToggleButton.closest("li[data-index]").getAttribute("data-index")
-			);
-			const todo = this.currentGroup.getTodo(todoIndex);
-			todoToggleButton.addEventListener("click", () => {
-				todo.toggleItem();
-				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoButtonHandlers();
-			});
-		});
-	}
-
-	#addTodoRemoveHandlers() {
-		const todoRemoveButtons = document.querySelectorAll(".todo-del");
-
-		todoRemoveButtons.forEach((todoRemoveButton) => {
-			const todoIndex = Number(
-				todoRemoveButton.closest("li[data-index]").getAttribute("data-index")
-			);
-			todoRemoveButton.addEventListener("click", () => {
-				this.currentGroup.removeTodo(todoIndex);
-				this.todoUI.renderTodos(this.currentGroup);
-				this.#addTodoButtonHandlers();
-			});
-		});
-	}
-
-	#addTodoButtonHandlers() {
-		this.#addTodoEditHandlers();
-		this.#addTodoToggleHandlers();
-		this.#addTodoRemoveHandlers();
+	clearTodos() {
+		if (this.currentGroup) {
+			this.currentGroup.todos = [];
+			this.onStateChange();
+		}
 	}
 }
 
